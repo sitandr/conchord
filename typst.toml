@@ -6,3 +6,4 @@ authors = ["sitandr"]
 license = "MIT"
 description = "Easily write lyrics with chords and generate colorful chord diagrams."
 exclude = ["examples"]
+repository = "https://github.com/sitandr/conchord"

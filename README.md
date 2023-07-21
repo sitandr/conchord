@@ -1,10 +1,10 @@
 # Conchord
 
-`conchord` (concise chord) is a typst package to write lyrics with chords and generate colorful fretboard diagram (aka chord diagram). It is inspired by `chordx` package and my previous tiny project for generating chord diagrams svgs.
+`conchord` (concise chord) is a [typst](https://github.com/typst/typst) package to write lyrics with chords and generate colorful fretboard diagram (aka chord diagram). It is inspired by [chordx](https://github.com/ljgago/typst-chords) package and my previous tiny project for generating chord diagrams svgs.
 
 # Overview
 
-`conchord` makes it easy to add new chords, both for diagrams and lyrics. Unlike `chordx`, you don't need to think about layout and pass lots of arrays for drawing barres. Just pass a string with holded frets and it will work:
+`conchord` makes it easy to add new chords, both for diagrams and lyrics. Unlike [chordx](https://github.com/ljgago/typst-chords), you don't need to think about layout and pass lots of arrays for drawing barres. Just pass a string with holded frets and it will work:
 
 ```ts
 #import "@preview/conchord:0.1.0": create-chordgen, overchord
@@ -43,7 +43,7 @@ It is easy to customize the colors and styles of chords with `colors` argument a
 
 > NOTE: be careful when using **!**, if barre cannot be used, it will result into nonsense.
 
-For lyrics, you don't need to add chord to word and specify the number of char in words (unlike `chordx`). Simply add `#overchord` to the place you want a chord. Compose with native Typst stylistic things for non-plain look (you don't need to dig into `chordx`'s custom arguments):
+For lyrics, you don't need to add chord to word and specify the number of char in words (unlike [chordx](https://github.com/ljgago/typst-chords)). Simply add `#overchord` to the place you want a chord. Compose with native Typst stylistic things for non-plain look (you don't need to dig into [chordx](https://github.com/ljgago/typst-chords)'s custom arguments):
 
 ```ts
 #let och(it) = overchord(strong(it))
@@ -64,9 +64,9 @@ For lyrics, you don't need to add chord to word and specify the number of char i
 
 # Features
 
-I was quite amazed with general idea of `chordx`, but a bit frustated with implementation, so I decided to quickly rewrite my old js code to typst. I use `cetz` there, so code is quite clean.
+I was quite amazed with general idea of [chordx](https://github.com/ljgago/typst-chords), but a bit frustated with implementation, so I decided to quickly rewrite my old js code to typst. I use `cetz` there, so code is quite clean.
 
-> Note: This package doesn't use any peice of `chordx`, only the general idea is used.
+> Note: This package doesn't use any peice of [chordx](https://github.com/ljgago/typst-chords), only the general idea is used.
 
 Brief comparison may be seen there, some concepts explained below:
 
@@ -77,7 +77,7 @@ Write frets for chord as you hold it, like a string like "123456" (see examples 
 
 > NOTE: I can't guarantee that will be the best chord layout. Moreover, the logic is quite simple: e.g., barre can't be multiple and can't be put anwhere except first bar in the image. However, surprisingly, it works well in almost all of the common cases, so the exceptions are really rare.
 
-If you need to create something too _custom/complex_ ~~(but not _concise_)~~, maybe it is worth to try `chordx`. You can also try using core function `render-chord` for more manual control, but it is still limited by one barre starting from one (but that barre may be shifted). If you think that feature should be supported, you can create issue there.
+If you need to create something too _custom/complex_ ~~(but not _concise_)~~, maybe it is worth to try [chordx](https://github.com/ljgago/typst-chords). You can also try using core function `render-chord` for more manual control, but it is still limited by one barre starting from one (but that barre may be shifted). If you think that feature should be supported, you can create issue there.
 
 ## Shadow barre
 Some chord generators put barre only where it _ought to_ be (any less will not hold some strings). Others put it where it can be (sometimes maximal size, sometimes some other logic). I use simple barre where it **ought to** be, and add _shadow barre_ where it **could** maximally be. You can easily disable it by either setting `use-shadow-barre: false` on `create-chordgen` (only necessary part of barre rendered) or by setting color of `shadow-barre` the same as `barre` (maximal possible barre).
@@ -112,7 +112,7 @@ Customize the colors of chord elements. `create-chordgen` accepts the `colors` d
 
 ## Assertions
 
-Currently `chordx` has almost no checks inside for correctness of passed chords.  `conchord` currently checks for
+Currently [chordx](https://github.com/ljgago/typst-chords) has almost no checks inside for correctness of passed chords.  `conchord` currently checks for
 
 - Number of passed&parsed frets equal to set string-number
 - Only numbers and `x` passed as frets
