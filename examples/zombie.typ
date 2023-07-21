@@ -1,3 +1,4 @@
+// "../lib.typ" should be replaced with "@preview/conchord:0.1.0" if used outside of package
 #import "../lib.typ": new-chordgen, overchord
 
 // For better png in README
