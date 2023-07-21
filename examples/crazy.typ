@@ -1,7 +1,7 @@
-#import "../lib.typ": create-chordgen
+#import "../lib.typ": new-chordgen
 #set page(height: auto, width: auto, margin: 1em)
 
-#let crazy-chord = create-chordgen(string-number: 3,
+#let crazy-chord = new-chordgen(string-number: 3,
     colors: (shadow-barre: orange,
         grid: gray.darken(30%),
         hold: red,

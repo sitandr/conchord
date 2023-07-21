@@ -1,5 +1,5 @@
 #import "@preview/chordx:0.1.0": *
-#import "../lib.typ": create-chordgen, overchord
+#import "../lib.typ": new-chordgen, overchord
 
 #set page(height: auto, margin: 1em)
 #set align(center)
@@ -12,7 +12,7 @@
   [conchord],
   [
     ```typst
-#let chord = create-chordgen()
+#let chord = new-chordgen()
 #chord("x, 6, 10, 7, 9, 6",
   name: "D#maj7sus4add13")
     ```
@@ -20,7 +20,7 @@
   [
     // Chordx chords are smaller, so for better
     // comparison need to make it smaller
-    #let chord = create-chordgen()//scale-length: 0.6pt)
+    #let chord = new-chordgen()//scale-length: 0.6pt)
     #chord("x, 6, 10, 7, 9, 6", name: "D#maj7sus4add13")
   ],
   [chordx],

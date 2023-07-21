@@ -212,7 +212,7 @@
 }
 
 
-#let create-chordgen(string-number: 6, use-shadow-barre: true, scale-length: 1pt, colors: (:)) = {
+#let new-chordgen(string-number: 6, use-shadow-barre: true, scale-length: 1pt, colors: (:)) = {
     (tabstring, name: " ") => {
         let (tabs, force-barre) = parse-tabstring(tabstring)
         generate-chord(tabs, name: name, string-number: string-number, force-barre: force-barre, use-shadow-barre: use-shadow-barre, scale-length: scale-length, colors: colors)

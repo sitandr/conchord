@@ -7,9 +7,9 @@
 `conchord` makes it easy to add new chords, both for diagrams and lyrics. Unlike [chordx](https://github.com/ljgago/typst-chords), you don't need to think about layout and pass lots of arrays for drawing barres. Just pass a string with holded frets and it will work:
 
 ```ts
-#import "@preview/conchord:0.1.0": create-chordgen, overchord
+#import "@preview/conchord:0.1.0": new-chordgen, overchord
 
-#let chord = create-chordgen()
+#let chord = new-chordgen()
 
 #box(chord("x32010", name: "C"))
 #box(chord("x33222", name: "F#m/C#"))
@@ -25,7 +25,7 @@
 It is easy to customize the colors and styles of chords with `colors` argument and `show` rules for text. You can also put `!` and `*` marks in the end of the string to force diagram generation. `!` forces barre, `*` removes it:
 
 ```ts
-#let custom-chord = create-chordgen(string-number: 3,
+#let custom-chord = new-chordgen(string-number: 3,
     colors: (shadow-barre: orange,
         grid: gray.darken(30%),
         hold: red,
@@ -80,7 +80,7 @@ Write frets for chord as you hold it, like a string like "123456" (see examples 
 If you need to create something too _custom/complex_ ~~(but not _concise_)~~, maybe it is worth to try [chordx](https://github.com/ljgago/typst-chords). You can also try using core function `render-chord` for more manual control, but it is still limited by one barre starting from one (but that barre may be shifted). If you think that feature should be supported, you can create issue there.
 
 ## Shadow barre
-Some chord generators put barre only where it _ought to_ be (any less will not hold some strings). Others put it where it can be (sometimes maximal size, sometimes some other logic). I use simple barre where it **ought to** be, and add _shadow barre_ where it **could** maximally be. You can easily disable it by either setting `use-shadow-barre: false` on `create-chordgen` (only necessary part of barre rendered) or by setting color of `shadow-barre` the same as `barre` (maximal possible barre).
+Some chord generators put barre only where it _ought to_ be (any less will not hold some strings). Others put it where it can be (sometimes maximal size, sometimes some other logic). I use simple barre where it **ought to** be, and add _shadow barre_ where it **could** maximally be. You can easily disable it by either setting `use-shadow-barre: false` on `new-chordgen` (only necessary part of barre rendered) or by setting color of `shadow-barre` the same as `barre` (maximal possible barre).
 
 
 ## Name auto-scaling
@@ -102,7 +102,7 @@ It takes on default `-0.25em` width to remove one adjacent space, so
 
 ## Colors
 
-Customize the colors of chord elements. `create-chordgen` accepts the `colors` dictionary with following possible fields:
+Customize the colors of chord elements. `new-chordgen` accepts the `colors` dictionary with following possible fields:
   - `grid`: color of grid, default is `gray.darken(20%)`
   - `open`: color of circles for open strings, default is `black`
   - `muted`: color of crosses for muted strings, default is `black`

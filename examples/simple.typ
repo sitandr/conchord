@@ -1,8 +1,8 @@
 #set page(height: auto, width: auto, margin: 1em)
 
-#import "../lib.typ": create-chordgen
+#import "../lib.typ": new-chordgen
 
-#let chord = create-chordgen()
+#let chord = new-chordgen()
 
 #box(chord("x32010", name: "C"))
 #box(chord("x33222", name: "F#m/C#"))

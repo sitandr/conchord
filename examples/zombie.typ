@@ -1,9 +1,9 @@
-#import "../lib.typ": create-chordgen, overchord
+#import "../lib.typ": new-chordgen, overchord
 
 // For better png in README
 #set page(height: auto)
 
-#let standart-chord = create-chordgen()
+#let standart-chord = new-chordgen()
 #let chord(tabs, name) = box(standart-chord(tabs, name: name), inset: 0.3em)
 
 #set page(margin: (right: 40%))
