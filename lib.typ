@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.0.1": canvas, draw
+#import "@preview/cetz:0.1.1": canvas, draw
 
 #let render-chord(hold, open, muted, fret-number, name,
     barre: 0, barre-shift: 0, shadow-barre: 0, string-number: 6,
@@ -24,10 +24,10 @@
     /// outputs canvas with height=80 * scale-length 
     /// and width=((string-number + 1)*10 + 5) * scale-length
     
-    assert.eq(type(name), "string")
-    assert.eq(type(hold), "array")
-    assert.eq(type(open), "array")
-    assert.eq(type(muted), "array")
+    assert.eq(type(name), str)
+    assert.eq(type(hold), array)
+    assert.eq(type(open), array)
+    assert.eq(type(muted), array)
 
     let default-blue = rgb("5d6eaf");
 
@@ -38,7 +38,7 @@
         import draw: *
         stroke(colors.at("muted", default: black) + 1*scale-length)
 
-        line((0, 0)) // always include zero
+        line((0, 0), (0, 0)) // always include zero
 
         for n in muted{ // Draw muted strings
             line((n*10 + 1.1, -2), (rel: (7, -7)))
@@ -90,7 +90,7 @@
 
         // Add "empty" point for the same
         // width with and without fret numbers
-        line((string-number*10 + 12, 5))
+        line((string-number*10 + 12, -75), (string-number*10 + 12, -75))
         
         let l = name.len()
         let font-size = if (l < 8){13}
@@ -138,7 +138,7 @@
             open.push(i);
         }
         else{
-            assert(type(tabs.at(i)) == "integer", message: "Passed fret " + repr(tabs.at(i)) + " that is not \"x\" or number")
+            assert(type(tabs.at(i)) == int, message: "Passed fret " + repr(tabs.at(i)) + " that is not \"x\" or number")
             hold.push((i, tabs.at(i)))
 
             if (tabs.at(i) < min-fret or (min-counter == 0 and tabs.at(i) == min-fret)){

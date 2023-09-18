@@ -1,4 +1,4 @@
-#import "@preview/chordx:0.1.0": *
+#import "@preview/chordx:0.2.0": *
 #import "../lib.typ": new-chordgen, overchord
 
 #set page(height: auto, margin: 1em)
@@ -12,8 +12,8 @@
   [conchord],
   [
     ```typst
-#let chord = new-chordgen()
-#chord("x, 6, 10, 7, 9, 6",
+  #let chord = new-chordgen()
+  #chord("x, 6, 10, 7, 9, 6",
   name: "D#maj7sus4add13")
     ```
   ],
@@ -26,22 +26,22 @@
   [chordx],
   [
     ```typst
-    #let chord = new-graph-chords()
+    #let chord = new-chart-chords()
 
     #chord(
-      capos: ((fret: 1, start: 1, end: 5),),
+      capos: (("115"),),
       fret-number: 6,
-      ("x", "n", 5, 2, 4, "n")
+      tabs: "xn524n"
     )[D\#maj7sus4add13]
     ```
   ],
   [
-    #let chord = new-graph-chords()
+    #let chord = new-chart-chords()
 
     #chord(
-      capos: ((fret: 1, start: 1, end: 5),),
+      capos: ("115"),
       fret-number: 6,
-      ("x", "n", 5, 2, 4, "n")
+      tabs: "xn524n"
     )[D\#maj7sus4add13]
   ],
   [conchord],
