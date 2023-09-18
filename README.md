@@ -6,7 +6,7 @@
 
 `conchord` makes it easy to add new chords, both for diagrams and lyrics. Unlike [chordx](https://github.com/ljgago/typst-chords), you don't need to think about layout and pass lots of arrays for drawing barres. Just pass a string with holded frets and it will work:
 
-```ts
+```typst
 #import "@preview/conchord:0.1.0": new-chordgen, overchord
 
 #let chord = new-chordgen()
@@ -24,7 +24,7 @@
 
 It is easy to customize the colors and styles of chords with `colors` argument and `show` rules for text. You can also put `!` and `*` marks in the end of the string to force diagram generation. `!` forces barre, `*` removes it:
 
-```ts
+```typst
 #let custom-chord = new-chordgen(string-number: 3,
     colors: (shadow-barre: orange,
         grid: gray.darken(30%),
@@ -45,7 +45,7 @@ It is easy to customize the colors and styles of chords with `colors` argument a
 
 For lyrics, you don't need to add chord to word and specify the number of char in words (unlike [chordx](https://github.com/ljgago/typst-chords)). Simply add `#overchord` to the place you want a chord. Compose with native Typst stylistic things for non-plain look (you don't need to dig into [chordx](https://github.com/ljgago/typst-chords)'s custom arguments):
 
-```ts
+```typst
 #let och(it) = overchord(strong(it))
 
 === #raw("[Verse 1]")
@@ -90,7 +90,7 @@ Chord name font size is _reduced_ for _large_ chord names, so the name fits well
 Just add chord labels above lyrics in arbitrary place, don't think about what letter exactly it should be located. By default it aligns the chord label to the left, so it produces pretty results out-of-box. You can pass other alignments to `alignment` argument, or use the chords stright inside words.
 
 The command is _much_ simplier than chordx (of course, it is a trade-off):
-```ts
+```typst
 #let overchord(body, align: start, height: 1em, width: -0.25em) = box(place(align, body), height: 1em + height, width: width)
 ```
 
