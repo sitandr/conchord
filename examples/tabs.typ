@@ -45,4 +45,4 @@ Not a lot customization is available yet, but something is already possible:
 
 #show raw: set text(red, font: "Comic Sans MS")
 
-#tabs.new(tabs.gen("0/1+2/5-1 ^0/1+`3/5-2.."), scale: 0.2cm, one-beat-length: 12)
+#tabs.new(tabs.gen(s-num: 5, "0/1+2/5-1 ^0/1+`3/5-2.."), scale: 0.2cm, one-beat-length: 12, s-num: 5)
