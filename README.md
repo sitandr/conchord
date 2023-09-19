@@ -1,6 +1,6 @@
 # Conchord
 
-`conchord` (concise chord) is a [typst](https://github.com/typst/typst) package to write lyrics with chords and generate colorful fretboard diagram (aka chord diagram). It is inspired by [chordx](https://github.com/ljgago/typst-chords) package and my previous tiny project for generating chord diagrams SVG-s.
+`conchord` (concise chord) is a [typst](https://github.com/typst/typst) package to write lyrics with chords and generate colorful fretboard diagram (aka chord diagram). From `0.1.1` there is also experimental tabs support (though quite simple and unstable yet). It is inspired by [chordx](https://github.com/ljgago/typst-chords) package and my previous tiny project for generating chord diagrams SVG-s.
 
 # Overview
 
@@ -66,7 +66,7 @@ For lyrics, you don't need to add chord to word and specify the number of char i
 
 I was quite amazed with general idea of [chordx](https://github.com/ljgago/typst-chords), but a bit frustated with implementation, so I decided to quickly rewrite my old js code to Typst. I use `cetz` there, so code is quite clean.
 
-> Note: This package doesn't use any piece of [chordx](https://github.com/ljgago/typst-chords), only the general idea is used.
+> Note: This package doesn't use any piece of [chordx](https://github.com/ljgago/typst-chords), only the general idea is taken.
 
 Brief comparison may be seen there, some concepts explained below:
 
@@ -112,8 +112,108 @@ Customize the colors of chord elements. `new-chordgen` accepts the `colors` dict
 
 ## Assertions
 
-Currently [chordx](https://github.com/ljgago/typst-chords) has almost no checks inside for correctness of passed chords.  `conchord` currently checks for
+Currently [chordx](https://github.com/ljgago/typst-chords) has almost no checks inside for correctness of passed chords.  `conchord`, on the other side, checks for
 
 - Number of passed&parsed frets equal to set string-number
 - Only numbers and `x` passed as frets
 - All frets fitting in the diagram
+
+# Tabs
+
+> Everything there is highly experimental and unstable
+
+![Tabs example](examples/tabs.png)
+
+```typst
+#let ending(n) = {
+    rect(stroke: (left: black, top: black), inset: 0.2em, n + h(3em))
+    v(0.5em)
+}
+
+
+#tabs.new(eval-scope: (chord: chord, ending: ending), tabs.gen[```
+2/4 2/4-3 2/4-2 2/4-3 |
+2/4-2 2/4-3 2/4 2/4 2/4 |
+2/4-2 p 0/2-3 3/2-2 
+|:
+
+##
+    chord("022000", name: "Em")
+    v(4em)
+##
+
+0/1+0/6 0/1 0/1-3 2/1 | 3/1+3/5-2 3/1 3/1-3 5/1 | 2/1+0/4-2 2/1 0/1-3 3/2-3 | \
+3/2-2 `5/2-3 p-2 0/2-3 3/2 || ## [...] ## || 7/1-3 0/1-2 p-3 0/1 3/1 |
+
+2/1-3
+2/1
+##
+    ending[1.]
+##
+3/1 0/1 2/1-2 p-3 0/2-3 3/2-3 |
+
+2/1-2
+##
+    ending[2.]
+##
+2/1 0/1-3 3/2 :| 0/6-2 | ^0/6-2 ||
+
+
+```])
+
+
+Not a lot customization is available yet, but something is already possible:
+
+#show raw: set text(red, font: "Comic Sans MS")
+
+#tabs.new(tabs.gen("0/1+2/5-1 ^0/1+`3/5-2.."), scale: 0.2cm, one-beat-length: 12)
+```
+
+As you can see from example, you can use raw strings or code blocks to write tabs, there is no real difference.
+
+The general idea is very simple: to write a number on some line, write `<fret number>/<string>`.
+
+**Spaces are important!** All notes and special symbols work well only if properly separated. 
+
+### Duration
+
+By default they will be quarter notes. To change that, you have to specify the duration: `<fret>/<string>-<duration>`, where duration is $log_2$ from note duration. So a whole note will be `-0`, a half: `-1` and so on. You can also use as many dots as you want to multiply duration by 1.5, e.g. `-2.`
+
+Once you change the duration, all the following notes will use it, so you have to specify duration every time it is changed (basically, always, but it really depends on composition). Of course, you can just ignore all that duration staff.
+
+### Ties and slides
+
+You can _tie_ notes or _slide_ between them. To use ties, you have to add `^` in front of _second_ tied note, like `1/1 ^3/1`. To use slides you have to do the same, but with \`.
+
+_Current limitation:_ tying and sliding works only on the same string and may work really bad if tied/slided through line break.
+
+### Bars and repetitions
+
+To add simple bar, just add `|`. To add double bar line, use `| |`. To add end movement/composition, add `||`. To add repetitions, use `|:` and `:|` respectively.
+
+Unfortunately, they are all supported things for now. But wait, there is still one cool thing left!
+
+### Linebreaks
+
+Notes that don't fit in line will be automatically moved to next, but that, unfortunately, doesn't take bars into account. To do that you will have to that manually, using `\`.
+
+### Custom content
+
+Add any typst code you want between `## … ##`. It will be rendered with `cetz` on top of the line where you wrote it. That means you can write _lyrics, chords, add complex things like endings_, even **draw the elements that are still missing** (well, it is worth to create issue there, I will try to do something).
+
+That code is evaluated with `eval`, so you will need to pass dictionary to `eval-scope` with all things you want to use.
+
+And yes, if you enjoy drawing missing things, you can also use `extra` argument in `tabs.new` where you can put any `cetz` inner things (tabs uses canvas, and that allow you drawing on it).
+
+### Plans
+
+1. Add _(optional)_ "rhythm section" under tabs
+2. Add more signs&lines
+3. Add more built-in things to attach above tabs
+4. Add more bar&rhythm complex logic
+5. Add more customizations
+6. Improve rendering, fix rendering bugs
+
+It is far from what I want to do, so maybe there will be much more! I will be very glad to receive any feedback.
+
+I also want to try creating roughly the same thing for musical notation in general, but it is a much bigger task.

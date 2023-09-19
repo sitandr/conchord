@@ -1,4 +1,5 @@
-#import "@preview/cetz:0.1.1": canvas, draw
+#import "tabs.typ"
+#import "tabs.typ": canvas, draw
 
 #let render-chord(hold, open, muted, fret-number, name,
     barre: 0, barre-shift: 0, shadow-barre: 0, string-number: 6,
