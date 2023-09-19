@@ -1,6 +1,6 @@
 # Conchord
 
-`conchord` (concise chord) is a [typst](https://github.com/typst/typst) package to write lyrics with chords and generate colorful fretboard diagram (aka chord diagram). From `0.1.1` there is also experimental tabs support (though quite simple and unstable yet). It is inspired by [chordx](https://github.com/ljgago/typst-chords) package and my previous tiny project for generating chord diagrams SVG-s.
+`conchord` (concise chord) is a [Typst](https://github.com/typst/typst) package to write lyrics with chords and generate colorful fretboard diagram (aka chord diagram). From `0.1.1` there is also experimental tabs support (though quite simple and unstable yet). It is inspired by [chordx](https://github.com/ljgago/typst-chords) package and my previous tiny project for generating chord diagrams SVG-s.
 
 # Overview
 
