@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.1.1": canvas, draw
+#import "@preview/cetz:0.1.2": canvas, draw
 
 #let new(
   tabs,
@@ -22,14 +22,18 @@
           let draw-lines(y, x: width) = {
             // TODO: use on-layer
             {
-              for i in range(s-num) {
-                line((0, -(y + i)), (x, -(y + i)), stroke: rgb(1, 1, 1, 20%))
-              }
+              on-layer(-1, {
+                for i in range(s-num) {
+                  line((0, -(y + i)), (x, -(y + i)), stroke: gray)
+                }
+              })
             }
           }
 
           let draw-bar(x, y, width: 1.0) = {
+            on-layer(-1,
             line((x, -y), (x, -y - s-num + 1), stroke: width * 1.2pt + gray)
+            )
           }
 
           let x = 0
@@ -51,6 +55,7 @@
               let frets = n.at(0)
 
               if x >= width {
+                x = width
                 draw-lines(y)
                 draw-bar(x, y)
                 last-string-x = (-1.5,) * 6
@@ -139,7 +144,7 @@
                       (last-string-x.at(n-y - 1), y - 0.5),
                       ((last-x + last-string-x.at(n-y - 1)) / 2, y - 1.0),
                       (last-x, y - 0.5),
-                      stroke: rgb(1, 1, 1, 50%),
+                      stroke: luma(50%),
                     )
                   } else if fret.at(2) == "`" {
                     let y = - (y + n-y - 1)
@@ -148,14 +153,14 @@
 
                     line(
                       (last-string-x.at(n-y - 1) + 0.3, y - dy),
-                      (last-x, y + dy),
-                      stroke: rgb(1, 1, 1, 50%),
+                      (last-x - 0.3, y + dy),
+                      stroke: luma(50%),
                     )
                   }
                 }
                 content(
                   (last-x, - (y + n-y - 1)),
-                  highlight(fill: white, bottom-edge: "bounds", raw(str(fret.at(0)))),
+                 raw(str(fret.at(0))),
                 )
                 last-string-x.at(n-y - 1) = last-x
                 last-tab-x.at(n-y - 1) = fret.at(0)
