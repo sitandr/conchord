@@ -102,10 +102,10 @@
 
         let middle-anchor = (right-end - 6.0*l) > 0;
         
-        content("grid.bottom", [
+        content("grid.south", [
             #set text(size: font-size*scale-length, baseline: scale-length*3)
             #name
-            ], anchor: "top")
+            ], anchor: "north")
     })
 }
 

@@ -1,4 +1,4 @@
-#set page(height: auto, width: auto, margin: 1em)
+#set page(height: auto, width: 60em, margin: 1em)
 
 #import "../lib.typ": tabs, new-chordgen
 
@@ -36,8 +36,11 @@
     ending[2.]
 ##
 2/1 0/1-3 3/2 :| 0/6-2 | ^0/6-2 ||
-
-
+\
+1/1 2/1 2/2 2/2 2/3 2/3 4/4 4/4 4/4 4/4 4/4 4/4 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 2/3 \
+10/1-3 10/1-3 10/1-3 10/1-4 10/1-4 10/1-4 10/1-4 10/1-4 10/1-1
+\
+1/3bfull
 ```])
 
 
@@ -46,3 +49,4 @@ Not a lot customization is available yet, but something is already possible:
 #show raw: set text(red, font: "Comic Sans MS")
 
 #tabs.new(tabs.gen(s-num: 5, "0/1+2/5-1 ^0/1+`3/5-2.."), scale: 0.2cm, one-beat-length: 12, s-num: 5)
+
