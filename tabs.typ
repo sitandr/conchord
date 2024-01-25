@@ -155,10 +155,10 @@
               }
 
               let frets = n.notes
-
+              let dx = one-beat-length * calc.pow(2, -n.duration)
               // pause
               if frets.len() == 0 {
-                x += one-beat-length * calc.pow(2, -n.duration)
+                x += dx
                 continue
               }
 
@@ -201,19 +201,47 @@
                   )
 
                   if fret.bend != none {
-                    bezier((x + 0.5, - (y + n-y - 1)), (x+1.5, - (y - 1)), (x+1.5, - y - n-y + 1), mark: (length: 0.7, end: (symbol: ">", fill: black, length: 0.5, angle: 30deg, flex: false)))
+                    let alpha = if fret.bend-return {0.4} else {0.8}
+                    
+                    bezier(
+                      (x + 0.5, - (y + n-y - 1)),
+                      (x+alpha*dx, - (y - 1)),
+                      (x+alpha*dx*0.8, - (y + n-y - 1)),
+                      (x+alpha*dx, - (y + n-y - 1)),
+                      mark: (
+                        length: 0.7,
+                         end: (symbol: ">",
+                          fill: black,
+                          length: 0.5, 
+                          angle: 30deg, 
+                          flex: false))
+                    )
                     content(
-                      (x + 1.5, -y + 1.2),
+                      (x + alpha*dx, -y + 1.2),
                       raw(str(fret.bend)),
                       anchor: "south"
                     )
+                    if fret.bend-return {
+                      bezier(
+                        (x+alpha*dx, - (y - 1)),
+                        (x+0.8*dx, - (y + n-y - 1)), 
+                        (x+0.64*dx, -y+1), 
+                        (x+0.8*dx, -y+1), 
+                        mark: (
+                          length: 0.7, 
+                          end: (symbol: ">", 
+                            fill: black, 
+                            length: 0.5, 
+                            angle: 30deg, flex: false))
+                      )
+                    }
                   }
                 })
                 last-string-x.at(n-y - 1) = x
                 last-tab-x.at(n-y - 1) = fret.fret
                 last-sign = "n"
               }
-              x += one-beat-length * calc.pow(2, -n.duration)
+              x += dx
             }
             x += 0.5
           }
@@ -248,9 +276,14 @@
       let cont = if n.starts-with("^") { "^" } else if n.starts-with("`") { "`" } else { none }
       if cont != none { n = n.slice(1) }
       let bend = n.split("b")
+      let bend-return = false
       if bend.len() > 1 {
         n = bend.at(0)
         bend = bend.at(-1)
+        if bend.ends-with("r") {
+          bend = bend.slice(0, -1)
+          bend-return = true
+        }
       }
       else {
         bend = none
@@ -265,6 +298,7 @@
       let res = (fret: coords.at(0), string: coords.at(1))
       res.connect = cont
       res.bend = bend
+      res.bend-return = bend-return
 
       return res
     },
