@@ -65,28 +65,28 @@
             stroke(barre-col + 5*scale-length)
             fill(barre-col)
             line((right-end, -17.9 - barre-shift*10), (rel: (if shadow-barre > 0{6} else{8} - barre*10, 0)), name: "barre")
-            circle("barre.right", radius: 2.5, stroke: none)
+            circle("barre.start", radius: 2.5, stroke: none)
 
             if shadow-barre > 0 {
                 let sh-col = colors.at("shadow-barre", default: default-blue.lighten(30%))
                 fill(sh-col)
                 stroke(sh-col + 5*scale-length)
-                line("barre.left", (rel: (2-shadow-barre*10, 0)), name: "shadow-barre")
-                circle("shadow-barre.left", radius: 2.5, stroke: none)
+                line("barre.end", (rel: (2-shadow-barre*10, 0)), name: "shadow-barre")
+                circle("shadow-barre.end", radius: 2.5, stroke: none)
             }
             else{
-                circle("barre.left", radius: 2.5, stroke: none)
+                circle("barre.end", radius: 2.5, stroke: none)
             }
         }
 
         // Add fret number text
         if fret-number > 0{
-            content("grid.top-right", [
+            content("grid.north-east", [
                 #set text(size: 13*scale-length)
                 #v(7*scale-length)
                 #h(5*scale-length)
                 #raw(str(fret-number))
-            ], anchor: "left")
+            ], anchor: "west")
         }
 
         // Add "empty" point for the same
