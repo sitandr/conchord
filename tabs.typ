@@ -50,7 +50,7 @@
             )
           }
 
-          let x = -0.5
+          let x = 0.0
           let y = 0
 
           let queque = ()
@@ -62,7 +62,7 @@
 
           let bar-index = 0
 
-          let draft = (enable: true, var: 0, const: -0.5, alpha: 1.0, queque-line-start: 1, bar-start: 0, note-start: float("inf"))
+          let draft = (enable: true, var: 0, const: 0.0, alpha: 1.0, queque-line-start: 1, bar-start: 0, note-start: float("inf"))
 
           while bar-index < tabs.len() {
             let bar = tabs.at(bar-index)
@@ -107,54 +107,57 @@
               }
 
               if n == "\\" {
-                if y == 24 {
-                  // panic(draft)
+                if last-sign == "||" {
+                  x -= 0.3
+                  draft.const -= 0.3
                 }
-                queque.push({
-                  if last-sign == "||" {
-                    x -= 0.7
-                    draft.const -= 0.7
-                  }
-                  else if last-sign == "|" {
-                    x -= 0.5
-                    draft.const -= 0.5
-                  }
-                  else {
-                    x += 0.5
-                    draw-bar(x, y)
-                    x += 0.5
-                    draft.const += 0.5
-                  }
-                })
+                else if last-sign == "|" {
+                  x -= 0.5
+                  draft.const -= 0.5
+                }
+                else {
+                  x += 0.5
+                  queque.push({draw-bar(x, y)})
+                  x += 0.5
+                  draft.const += 0.5
+                }
                 
-                if bar-index > 0 {
-                  if draft.enable {
-                    // panic(draft)
-                    last-sign = "\\"
-                    let alpha = calculate-alpha(draft)
-                    draft = (enable: false, var: 0, bar-start: draft.bar-start, queque-line-start: draft.queque-line-start, alpha: alpha, note-start: draft.note-start)
+                if bar-index == draft.bar-start + 1 and bar.len() == 1 {
+                  let _ = queque.pop()
+                  let _ = queque.pop()
+                } else {
+                  if bar-index > 0 {
+                    if draft.enable {
+                      // panic(draft)
+                      last-sign = "\\"
+                      let alpha = calculate-alpha(draft)
+                      draft = (enable: false, var: 0, bar-start: draft.bar-start, queque-line-start: draft.queque-line-start, alpha: alpha, note-start: draft.note-start)
 
-                    queque = queque.slice(0, draft.queque-line-start)
-                    bar-index = draft.bar-start
-                    
-                    note-index = draft.note-start
+                      queque = queque.slice(0, draft.queque-line-start)
+                      bar-index = draft.bar-start
+                      
+                      note-index = draft.note-start
 
-                    // jumping into bar end
-                    if note-index == float("inf") {
-                      draft.const = -0.5
-                      x = -0.5
+                      // jumping into bar end
+                      if note-index == float("inf") {
+                        draft.const = -0.5
+                        x = -0.5
+                      }
+                      else {
+                        draft.const = 1.0
+                        x = 1.0
+                      }
+
+                      continue
                     }
-                    else {
-                      draft.const = 1.0
-                      x = 1.0
-                    }
-
-                    continue
                   }
+                  
+                  queque.push({
+                    draw-lines(y, x: x - 0.5)
+                  })
                 }
-                queque.push({
-                  draw-lines(y, x: x - 0.5)
 
+                queque.push({
                   last-string-x = (-1.5,) * 6
                   y += s-num + line-spacing
                   draw-bar(0.0, y)
