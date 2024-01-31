@@ -1,10 +1,11 @@
 #import "@preview/cetz:0.2.0": canvas, draw
 
+#let native-scale = scale
 #let new(
   tabs,
   extra: none,
   eval-scope: none,
-  scale: 0.3cm,
+  scale-length: 0.3cm,
   s-num: 6,
   one-beat-length: 8,
   line-spacing: 2,
@@ -13,7 +14,7 @@
   let sign(x) = if x > 0 { 1 } else if x == 0 { 0 } else { -1 }
   layout(
     size => {
-      let width = size.width / scale * 0.95
+      let width = size.width / scale-length * 0.95
 
       let calculate-alpha(draft) = {
         let alpha = if draft.var != 0 {
@@ -29,7 +30,7 @@
       }
 
       canvas(
-        length: scale,
+        length: scale-length,
         {
           import draw: *
 
@@ -62,8 +63,9 @@
 
           let bar-index = 0
 
-          let draft = (enable: true, var: 0, const: 0.0, alpha: 1.0, queque-line-start: 1, bar-start: 0, note-start: float("inf"))
+          let draft = (enable: true, var: 0, const: 0.0, alpha: 1.0, queque-line-start: 1, bar-start: 0, note-start: float("inf"), try-break: false)
 
+          let tabs = tabs
           while bar-index < tabs.len() {
             let bar = tabs.at(bar-index)
             bar-index += 1
@@ -77,16 +79,50 @@
 
             let note-index = 0
             while note-index < bar.len() {
+              
+              // for debug usage
+              let ftabs = tabs.map(arr => arr.map(i => {if type(i) != str {"n"} else {i}}).join())
+              
               let n = bar.at(note-index)
               note-index += 1
+
               assert(calc.abs(x - (draft.const + draft.var)) < 0.001, message: str(x) +" " + str(draft.const) + " " + str(draft.var) + " " + repr(n))
 
+
+
               // have to make a break
-              if x > width + 1.01 and not draft.enable {
-                // panic(x, y, width, draft, last-sign)
-                x = width
+              if x > width + 0.51 and not draft.enable {
+                // reset everything to draft to the last bar
+                
+                if calculate-alpha(draft) > 1 and bar-index - draft.bar-start >= 2 and tabs.at(bar-index -2).at(-1) != "\\" {
+                  tabs.insert(bar-index - 1, ("\\",))
+                  
+                  // jumping into bar end
+                  let old-note-start = draft.note-start
+                  last-sign = "\\"
+                  
+                  draft = (enable: true, var: 0, bar-start: draft.bar-start, queque-line-start: draft.queque-line-start, alpha: 1.0, note-start: draft.note-start, try-break: true)
+
+                  queque = queque.slice(0, draft.queque-line-start)
+                  if old-note-start == float("inf") {
+                    draft.const = -0.5
+                    x = -0.5
+                  }
+                  else {
+                    draft.const = 1.0
+                    x = 1.0
+                  }
+
+                  bar-index = draft.bar-start
+                  note-index = draft.note-start
+                  continue
+                }
+
+                //panic(draft, bar-index, tabs.at(bar-index - 2).at(-1))
+
+                x = width - 0.5
                 queque.push({
-                  draw-lines(y)
+                  draw-lines(y, x: x)
                   draw-bar(x, y)
                   last-string-x = (-1.5,) * 6
                   x = 1.0
@@ -106,7 +142,13 @@
                 continue
               }
 
+
+          
               if n == "\\" {
+                if y == 32 and draft.try-break and draft.enable {
+                  //panic(last-sign, ftabs.at(bar-index - 1), ftabs.at(bar-index), note-index)
+                }
+                // content((x, -y), n)
                 if last-sign == "||" {
                   x -= 0.3
                   draft.const -= 0.3
@@ -119,19 +161,19 @@
                   x += 0.5
                   queque.push({draw-bar(x, y)})
                   x += 0.5
-                  draft.const += 0.5
+                  draft.const += 1.0
                 }
                 
                 if bar-index == draft.bar-start + 1 and bar.len() == 1 {
+                  // remove empty line
                   let _ = queque.pop()
                   let _ = queque.pop()
                 } else {
                   if bar-index > 0 {
                     if draft.enable {
-                      // panic(draft)
                       last-sign = "\\"
                       let alpha = calculate-alpha(draft)
-                      draft = (enable: false, var: 0, bar-start: draft.bar-start, queque-line-start: draft.queque-line-start, alpha: alpha, note-start: draft.note-start)
+                      draft = (enable: false, var: 0, bar-start: draft.bar-start, queque-line-start: draft.queque-line-start, alpha: alpha, note-start: draft.note-start, try-break: false)
 
                       queque = queque.slice(0, draft.queque-line-start)
                       bar-index = draft.bar-start
@@ -147,7 +189,6 @@
                         draft.const = 1.0
                         x = 1.0
                       }
-
                       continue
                     }
                   }
@@ -164,7 +205,7 @@
                   x = -0.5
                   last-sign = "\\"
                 })
-                draft = (enable: true, var: 0, const: -0.5, alpha: 1.0, queque-line-start: queque.len(), bar-start: bar-index, note-start: float("inf"))
+                draft = (enable: true, var: 0, const: -0.5, alpha: 1.0, queque-line-start: queque.len(), bar-start: bar-index, note-start: float("inf"), try-break: false)
                 continue
               }
 
@@ -203,6 +244,8 @@
               }
 
               if n == "|" {
+                //x -= 1.0
+                //draft.const -= 1.0
                 queque.push({
                   if last-sign == "|" {
                     x -= 0.5
@@ -266,11 +309,10 @@
                     (x, - (y + n-y - 1)),
                     {
                       let nlen = str(fret.fret).len()
-                      let size = if n.duration * nlen >= 5 {
+                      let size = if n.duration * nlen >= 5 * (scale-length/0.3cm) * (one-beat-length/8) {
                         1/calc.pow(2, n.duration - 3.5)/nlen
                       } else {1}
-                      set text(size: size * 1em)
-                      raw(str(fret.fret))
+                      native-scale(raw(str(fret.fret)), x: size * 100%, origin: left)
                     },
                     anchor: "west"
                   )
