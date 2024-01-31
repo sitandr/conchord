@@ -219,7 +219,7 @@
 
               if type(n) == array and n.at(0) == "##" {
                 queque.push({
-                  content((x, -y + 1), eval(n.at(1), scope: eval-scope))
+                  content((x, -y + 1), eval(n.at(2), scope: eval-scope), anchor: if n.at(1).len() > 0 {n.at(1)} else {none})
                 })
                 continue
               }
@@ -399,9 +399,9 @@
     }
 
     if code-mode {
-      if n == "##" {
+      if n.starts-with("##") {
         code-mode = false
-        cur-bar.push(("##", code.join()))
+        cur-bar.push(("##", n.slice(2), code.join()))
         code = ()
         continue
       }
