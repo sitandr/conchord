@@ -8,11 +8,25 @@
   s-num: 6,
   one-beat-length: 8,
   line-spacing: 2,
+  enable-scale: true
 ) = {
   let sign(x) = if x > 0 { 1 } else if x == 0 { 0 } else { -1 }
   layout(
     size => {
       let width = size.width / scale * 0.95
+
+      let calculate-alpha(draft) = {
+        let alpha = if draft.var != 0 {
+          (width - draft.const)/draft.var
+        } else {1}
+
+        if alpha > 3 or alpha < 0.9 {
+          1
+        }
+        else {
+          alpha
+        }
+      }
 
       canvas(
         length: scale,
@@ -32,11 +46,11 @@
 
           let draw-bar(x, y, width: 1.0) = {
             on-layer(-1,
-            line((x, -y), (x, -y - s-num + 1), stroke: width * 1.2pt + gray)
+            line((x, -y + 0.06), (x, -y - s-num + 1 - 0.06), stroke: width * 1.2pt + gray)
             )
           }
 
-          let x = 0
+          let x = -0.5
           let y = 0
 
           let queque = ()
@@ -44,26 +58,32 @@
           queque.push(draw-bar(0, 0))
           let last-string-x = (-1.5,) * 6
           let last-tab-x = (0,) * 6
-          let last-sign = none
+          let last-sign = "\\"
 
           let bar-index = 0
+
+          let draft = (enable: true, var: 0, const: -0.5, alpha: 1.0, queque-line-start: 1, bar-start: 0, note-start: float("inf"))
+
           while bar-index < tabs.len() {
             let bar = tabs.at(bar-index)
             bar-index += 1
 
             if bar.len() > 0 {
-              if (last-sign == "\\" or last-sign == none) {
-                if bar.at(0) != "||" { x += 1. } else { x -= 0.5 }
+              if (last-sign == "\\") {
+                if bar.at(0) != "||" { x += 1.; draft.const += 1 } 
+                else { x -= 0.5; draft.const -= 0.5 }
               }
-              
             }
+
             let note-index = 0
             while note-index < bar.len() {
               let n = bar.at(note-index)
               note-index += 1
+              assert(calc.abs(x - (draft.const + draft.var)) < 0.001, message: str(x) +" " + str(draft.const) + " " + str(draft.var) + " " + repr(n))
 
               // have to make a break
-              if x >= width {
+              if x > width + 1.01 and not draft.enable {
+                // panic(x, y, width, draft, last-sign)
                 x = width
                 queque.push({
                   draw-lines(y)
@@ -74,51 +94,96 @@
                   draw-bar(0.0, y)
 
                   // can remove one note
+                  // to move it to the next line
                   if note-index > 1 {
                     let _ = queque.pop()
                     note-index -= 2
                   }
                 })
                 last-sign = "\\"
+                draft = (enable: true, var: 0, const: 1.0, alpha: 1.0, queque-line-start: queque.len(), bar-start: bar-index, note-start: note-index + 1)
+                note-index -= 1
+                continue
               }
 
               if n == "\\" {
+                if y == 24 {
+                  // panic(draft)
+                }
                 queque.push({
-                  if last-sign != "||" and last-sign != "|" {
-                      draw-bar(x, y)
-                      x += 0.5
+                  if last-sign == "||" {
+                    x -= 0.7
+                    draft.const -= 0.7
+                  }
+                  else if last-sign == "|" {
+                    x -= 0.5
+                    draft.const -= 0.5
                   }
                   else {
-                      x -= 0.5
+                    x += 0.5
+                    draw-bar(x, y)
+                    x += 0.5
+                    draft.const += 0.5
                   }
+                })
+                
+                if bar-index > 0 {
+                  if draft.enable {
+                    // panic(draft)
+                    last-sign = "\\"
+                    let alpha = calculate-alpha(draft)
+                    draft = (enable: false, var: 0, bar-start: draft.bar-start, queque-line-start: draft.queque-line-start, alpha: alpha, note-start: draft.note-start)
 
+                    queque = queque.slice(0, draft.queque-line-start)
+                    bar-index = draft.bar-start
+                    
+                    note-index = draft.note-start
+
+                    // jumping into bar end
+                    if note-index == float("inf") {
+                      draft.const = -0.5
+                      x = -0.5
+                    }
+                    else {
+                      draft.const = 1.0
+                      x = 1.0
+                    }
+
+                    continue
+                  }
+                }
+                queque.push({
                   draw-lines(y, x: x - 0.5)
+
                   last-string-x = (-1.5,) * 6
                   y += s-num + line-spacing
-                  x = 0.0
-                  draw-bar(x, y)
-                  x -= 0.5
+                  draw-bar(0.0, y)
+                  x = -0.5
                   last-sign = "\\"
                 })
+                draft = (enable: true, var: 0, const: -0.5, alpha: 1.0, queque-line-start: queque.len(), bar-start: bar-index, note-start: float("inf"))
                 continue
               }
 
               if n == "<" {
+                draft.const -= 0.5
                 x -= 0.5
                 continue
               }
               if n == ">" {
+                draft.const += 0.5
                 x += 0.5
                 continue
               }
 
               if n == ":" {
                 queque.push({
-                  if last-sign == none { x -= 1 / 1 }
+                  if last-sign == none { x -= 1; draft.const -= 1 }
                   circle((x, -y - 1.5), radius: 0.2, fill: gray, stroke: gray)
                   circle((x, -y - 3.5), radius: 0.2, fill: gray, stroke: gray)
                   last-sign = ":"
                   x += 0.5
+                  draft.const += 0.5
                 })
                 continue
               }
@@ -128,6 +193,7 @@
                   x += 0.5
                   draw-bar(x, y, width: 4)
                   x += 0.5
+                  draft.const += 1.0
                   last-sign = "||"
                 })
                 continue
@@ -135,9 +201,14 @@
 
               if n == "|" {
                 queque.push({
-                  if last-sign == "|" {x -= 0.5}
+                  if last-sign == "|" {
+                    x -= 0.5
+                    draft.const -= 0.5
+                  }
                   draw-bar(x, y)
                   x += 0.5
+                  draft.const += 0.5
+
                   last-sign = "|"
                 })
                 continue
@@ -155,7 +226,8 @@
               }
 
               let frets = n.notes
-              let dx = one-beat-length * calc.pow(2, -n.duration)
+              let dx = one-beat-length * calc.pow(2, -n.duration) * draft.alpha
+              draft.var += dx
               // pause
               if frets.len() == 0 {
                 x += dx
@@ -244,6 +316,7 @@
               x += dx
             }
             x += 0.5
+            draft.const += 0.5
           }
 
           if last-sign == "||" {x -= 1.0}
