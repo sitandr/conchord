@@ -1,160 +1,5 @@
 #import "@preview/cetz:0.2.0": canvas, draw
-
-#let native-scale = scale
-
-#let to-int(s) = {
-  if s.matches(regex("^\d+$")).len() != 0 { int(s) } else { panic("Bad number: " + s) }
-}
-
-#let parse-note(n, s-num: 6) = {
-  if n == "p" {
-    return ()
-  }
-
-  return n.split("+").map(
-    n => {
-      let cont = if n.starts-with("^") { "^" } else if n.starts-with("`") { "`" } else { none }
-      if cont != none { n = n.slice(1) }
-      let bend = n.split("b")
-      let bend-return = false
-      if bend.len() > 1 {
-        n = bend.at(0)
-        bend = bend.at(-1)
-        if bend.ends-with("r") {
-          bend = bend.slice(0, -1)
-          bend-return = true
-        }
-      }
-      else {
-        bend = none
-      }
-      let coords = n.split("/").map(to-int)
-      if coords.len() != 2 {
-        panic("Specify fret and string numbers separated by `/`: " + n)
-      }
-      if coords.at(1) > s-num {
-        panic("Too large string number: " + n.at(1))
-      }
-      let res = (fret: coords.at(0), string: coords.at(1))
-      res.connect = cont
-      res.bend = bend
-      res.bend-return = bend-return
-
-      return res
-    },
-  )
-}
-
-#let gen(s, s-num: 6) = {
-  if type(s) == "content" {
-    s = s.text
-  }
-
-  let bars = ()
-  let cur-bar = ()
-  let cur-dur = 2
-  let code-mode = false
-  let code = ()
-
-  for (n, s,) in s.split(regex("\s+")).zip(s.matches(regex("\s+")) + ("",)) {
-    if n == "##" and not code-mode {
-      code-mode = true
-      continue
-    }
-
-    if code-mode {
-      if n.starts-with("##") {
-        code-mode = false
-        cur-bar.push(("##", n.slice(2), code.join()))
-        code = ()
-        continue
-      }
-
-      code.push(n)
-      code.push(s.text)
-      continue
-    }
-
-    if n == "<" {
-      cur-bar.push(n)
-      continue
-    }
-
-    if n == ":|" {
-      cur-bar.push(":")
-      cur-bar.push("|")
-      cur-bar.push("<")
-      cur-bar.push("||")
-      bars.push(cur-bar)
-      cur-bar = ()
-      n = n.slice(2)
-      continue
-    }
-
-    if n == "|:" {
-      cur-bar.push("||")
-      cur-bar.push("|")
-      cur-bar.push(":")
-      bars.push(cur-bar)
-      cur-bar = ()
-      n = n.slice(2)
-      continue
-    }
-
-    if n == "||" {
-      cur-bar.push("|")
-      cur-bar.push("<")
-      cur-bar.push("||")
-      bars.push(cur-bar)
-      cur-bar = ()
-      continue
-    }
-
-    if n == "|" {
-      cur-bar.push("|")
-      bars.push(cur-bar)
-      cur-bar = ()
-      continue
-    }
-
-    if n == "\\" {
-      //cur-bar.push("|")
-      cur-bar.push("\\")
-      bars.push(cur-bar)
-      cur-bar = ()
-      continue
-    }
-
-    if n == "" {
-      continue
-    }
-
-    let note-and-dur = n.split("-")
-    if note-and-dur.len() > 2 or note-and-dur == 0 {
-      panic("Specify one duration per note")
-    }
-
-    if note-and-dur.len() == 2 {
-      let dur = note-and-dur.at(1)
-      let mul = 0.0
-      while dur.ends-with(".") {
-        mul -= calc.log(1.5) / calc.log(2)
-        dur = dur.slice(0, -1)
-      }
-      cur-dur = to-int(dur) + mul
-    }
-
-    cur-bar.push((notes: parse-note(note-and-dur.at(0), s-num: s-num), duration: cur-dur))
-  }
-
-  if cur-bar.len() > 0 {
-    bars.push(cur-bar)
-    if bars.at(-1) != ("\\") {
-      bars.push(("\\",))
-    }
-  }
-  return bars
-}
+#import "./gen.typ": gen
 
 #let new(
   tabs,
@@ -167,12 +12,12 @@
   line-spacing: 2,
   enable-scale: true,
   colors: (:),
-  debug-render: float("inf"),
+  debug-render: none,
   debug-numbers: false
 ) = {
   let tabs = gen(tabs, s-num: s-num)
   let colors = (bars: gray, lines: gray, connects: luma(50%)) + colors
-  let sign(x) = if x > 0 { 1 } else if x == 0 { 0 } else { -1 }
+
   layout(
     size => {
       let width = size.width / scale-length * 0.95
@@ -194,100 +39,18 @@
         length: scale-length,
         {
           import draw: *
+          import "./drawing.typ": *
+
+          draw-bar = draw-bar.with(s-num, colors)
+          draw-lines = draw-lines.with(s-num, colors)
+          draw-column = draw-column.with(colors)
+          draw-slur = draw-slur.with(colors)
+          draw-slide = draw-slide.with(colors)
+          scale-fret-numbers = scale-fret-numbers.with(scale-length, one-beat-length, colors,)
+          draw-bend = draw-bend.with(colors)
+          draw-vibrato = draw-vibrato.with(colors)
+
           if preamble != none {preamble}
-
-          let draw-lines(y, x: width - 0.5) = {
-            {
-              on-layer(-1, {
-                for i in range(s-num) {
-                  line((0, -(y + i)), (x, -(y + i)), stroke: colors.lines)
-                }
-              })
-            }
-          }
-
-          let draw-bar(x, y, width: 1.0) = {
-            on-layer(-1,
-            line((x, -y + 0.06), (x, -y - s-num + 1 - 0.06), stroke: width * 1.2pt + colors.bars)
-            )
-          }
-
-          let draw-column(x, y) = {
-            circle((x, -y - 1.5), radius: 0.2, fill: gray, stroke: colors.bars)
-            circle((x, -y - 3.5), radius: 0.2, fill: gray, stroke: colors.bars)
-          }
-
-          let draw-slur(x, y, n-y, last-string-x) = {
-            let y = - (y + n-y - 1)
-            bezier-through(
-              (last-string-x.at(n-y - 1) + 0.3, y - 0.5),
-              ((x + last-string-x.at(n-y - 1)) / 2 + 0.3, y - 1.0),
-              (x + 0.3, y - 0.5),
-              stroke: colors.connects,
-            )
-          }
-
-          let draw-slide(x, y, n-y, last-string-x, fret, last-tab-x) = {
-            let y = - (y + n-y - 1)
-            let dy = fret.fret - last-tab-x.at(n-y - 1)
-            dy = sign(dy) * 0.2
-
-            line(
-              (last-string-x.at(n-y - 1) + 0.6, y - dy),
-              (x, y + dy),
-              stroke: colors.connects,
-            )
-          }
-
-          let scale-fret-numbers(fret, duration, alpha) = {
-            let nlen = str(fret).len()
-            let available = (scale-length/0.3cm) * (one-beat-length/8) * calc.pow(2, -duration) * alpha
-            let given = nlen * 0.09
-            
-            let size = if given > available {
-              available/given
-            } else {1}
-            native-scale(raw(str(fret)), x: size * 100%, origin: left)
-          }
-
-          let draw-bend(x, y, n-y, dx, bend-return, bend-text) = {
-            let alpha = if bend-return {0.4} else {0.8}
-                    
-            bezier(
-              (x + 0.5, - (y + n-y - 1)),
-              (x+alpha*dx, - (y - 1)),
-              (x+alpha*dx*0.8, - (y + n-y - 1)),
-              (x+alpha*dx, - (y + n-y - 1)),
-              stroke: colors.connects,
-              mark: (
-                length: 0.7,
-                  end: (symbol: ">",
-                  fill: colors.connects,
-                  length: 0.5, 
-                  angle: 30deg, 
-                  flex: false))
-            )
-            content(
-              (x + alpha*dx, -y + 1.2),
-              raw(str(bend-text)),
-              anchor: "south"
-            )
-            if bend-return {
-              bezier(
-                (x+alpha*dx, - (y - 1)),
-                (x+0.8*dx, - (y + n-y - 1)), 
-                (x+0.64*dx, -y+1), 
-                (x+0.8*dx, -y+1),
-                stroke: colors.connects,
-                mark: (
-                  length: 0.7, 
-                  end: (symbol: ">", 
-                    fill: colors.connects, 
-                    length: 0.5, 
-                    angle: 30deg, flex: false))
-              )
-            }
-          }
 
           let x = 0.0
           let y = 0
@@ -311,7 +74,7 @@
             let bar = tabs.at(bar-index)
             bar-index += 1
 
-            if counter-lim > debug-render {
+            if debug-render != none and counter-lim > debug-render {
               break
             }
 
@@ -334,7 +97,7 @@
                 }))
               }
 
-              if debug-numbers {
+              if debug-render != none {
                 counter-lim += 1
                 if counter-lim > debug-render {
                   break
@@ -372,7 +135,7 @@
                 }
 
                 queque.push({
-                  draw-lines(y)
+                  draw-lines(y, width - 0.5)
                   draw-bar(width - 0.5, y)
                   last-string-x = (-1.5,) * 6
                   x = 1.0
@@ -445,7 +208,7 @@
                   }
                   
                   queque.push({
-                    draw-lines(y, x: x - 0.5)
+                    draw-lines(y, x - 0.5)
                   })
                 }
 
@@ -547,6 +310,10 @@
                   if fret.bend != none {
                     draw-bend(x, y, n-y, dx, fret.bend-return, fret.bend)
                   }
+
+                  if fret.vib {
+                    draw-vibrato(x, y, n-y, dx)
+                  }
                 })
                 last-string-x.at(n-y - 1) = x
                 last-tab-x.at(n-y - 1) = fret.fret
@@ -557,9 +324,6 @@
             x += 0.5
             draft.const += 0.5
           }
-
-          if last-sign == "||" {x -= 1.0}
-          else if last-sign == "|" {x -= 0.5}
 
           let _ = queque.pop()
 

@@ -1,5 +1,5 @@
-#import "tabs.typ"
-#import "tabs.typ": canvas, draw
+#import "tabs/tabs.typ"
+#import "tabs/tabs.typ": canvas, draw
 
 #let render-chord(hold, open, muted, fret-number, name,
     barre: 0, barre-shift: 0, shadow-barre: 0, string-number: 6,

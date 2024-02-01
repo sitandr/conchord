@@ -51,14 +51,14 @@
 10/1-3 10/1-3 10/1-3 10/1-4 10/1-4 10/1-4 10/1-4 10/1-5. 10/1-5. 10/1-5 10/1-5 10/1-2
 \
 1/3bfullr+2/5-2 1/2b1/2-1 p-2
-```, eval-scope: (chord: chord, ending: ending), debug-numbers: false)
+```, eval-scope: (chord: chord, ending: ending))
 
 
 Not a lot customization is available yet, but something is already possible:
 
 #show raw: set text(red.darken(30%), font: "Comic Sans MS")
 
-#tabs.new("0/1+2/5-1 ^0/1+`3/5-2.. 2/3 | 2/3-1 2/3 2/3",
+#tabs.new("0/1+2/5-1 ^0/1+`3/5-2.. 2/3 | 2/3-1 2/3 2/3v",
   scale-length: 0.2cm,
   one-beat-length: 12,
   s-num: 5, 
