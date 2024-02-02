@@ -104,11 +104,20 @@
   let n = int(dx/0.8)
   let points = for i in range(n) {
     ((x + 0.8 * i, - (y  - 1)),
-    (x + 0.3 + 0.8 * i, - (y - 1.2)),
+    (x + 0.15 + 0.8 * i, - (y - 1.15)),
     (x + 0.3 + 0.8 * i, - (y  - 1)),
     (x + 0.45 + 0.8 * i, - (y - 0.8)),)
   }
-  hobby(
-   ..points,
-   stroke: black, fill: black)
+  
+  merge-path( {
+    hobby(
+      ..points, fill: black)
+    hobby(
+      ..points.rev().map(el => (el.at(0) + 0.04, el.at(1) + 0.2)), fill: black)
+    },
+    
+    stroke: none,
+    fill: black
+  )
+
 }
