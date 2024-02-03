@@ -12,6 +12,8 @@
   line-spacing: 2,
   enable-scale: true,
   colors: (:),
+  autoscale-max: 3.0,
+  autoscale-min: 0.9
   debug-render: none,
   debug-numbers: false,
 ) = {
@@ -27,7 +29,7 @@
           (width - draft.const) / draft.var
         } else { 1 }
         
-        if alpha > 3 or alpha < 0.9 {
+        if alpha > autoscale-max or alpha < autoscale-min {
           1
         } else {
           alpha
