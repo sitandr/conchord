@@ -4,7 +4,7 @@
 #let render-chord(hold, open, muted, fret-number, name,
     barre: 0, barre-shift: 0, shadow-barre: 0, string-number: 6,
     scale-length: 1pt, 
-    colors: (:)) = {
+    colors: (:), number-to-left: false) = {
     /// IMPORTANT: for the convinience there all strings are numbered FROM THE TOP (e.g. A will be 1)
     /// hold: array of coords of positions holded; string first, then shift"
     /// open: array of numbers of opened strings
@@ -41,7 +41,7 @@
 
         line((0, 0), (0, 0)) // always include zero
 
-        for n in muted{ // Draw muted strings
+        for n in muted { // Draw muted strings
             line((n*10 + 1.1, -2), (rel: (7, -7)))
             line((rel: (-7, 0)), (rel: (7, 7)))
         }
@@ -80,13 +80,22 @@
         }
 
         // Add fret number text
-        if fret-number > 0{
-            content("grid.north-east", [
-                #set text(size: 13*scale-length)
-                #v(7*scale-length)
-                #h(5*scale-length)
-                #raw(str(fret-number))
-            ], anchor: "west")
+        if fret-number > 0 {
+            if number-to-left {
+                content((0, -17), [
+                    #set text(size: 13*scale-length)
+                    #raw(str(fret-number))
+                ], anchor: "east")
+
+            }
+            else {
+                content("grid.north-east", [
+                    #set text(size: 13*scale-length)
+                    #v(7*scale-length)
+                    #h(5*scale-length)
+                    #raw(str(fret-number))
+                ], anchor: "west")
+            }
         }
 
         // Add "empty" point for the same
@@ -109,7 +118,7 @@
     })
 }
 
-#let generate-chord(tabs, name: "", string-number: 6, force-barre: 0, use-shadow-barre: true, scale-length: 1pt, colors: (:)) = {
+#let generate-chord(tabs, name: "", string-number: 6, force-barre: 0, use-shadow-barre: true, scale-length: 1pt, colors: (:), number-to-left: false) = {
     /// generates image with really simple rules
     /// tab: ARRAY of six elements (not a string);
     /// "x" (mute) and numbers are accepted
@@ -181,7 +190,7 @@
         fret-number = min-fret;
     }
 
-    return render-chord(hold, open, muted, fret-number, name, barre: barre, barre-shift: 0, shadow-barre: shadow-barre, string-number: string-number, colors: colors, scale-length: scale-length)
+    return render-chord(hold, open, muted, fret-number, name, barre: barre, barre-shift: 0, shadow-barre: shadow-barre, string-number: string-number, colors: colors, scale-length: scale-length, number-to-left: number-to-left)
 }
 
 
@@ -213,10 +222,10 @@
 }
 
 
-#let new-chordgen(string-number: 6, use-shadow-barre: true, scale-length: 1pt, colors: (:)) = {
+#let new-chordgen(string-number: 6, use-shadow-barre: true, scale-length: 1pt, colors: (:), number-to-left: false) = {
     (tabstring, name: " ") => {
         let (tabs, force-barre) = parse-tabstring(tabstring)
-        generate-chord(tabs, name: name, string-number: string-number, force-barre: force-barre, use-shadow-barre: use-shadow-barre, scale-length: scale-length, colors: colors)
+        generate-chord(tabs, name: name, string-number: string-number, force-barre: force-barre, use-shadow-barre: use-shadow-barre, scale-length: scale-length, colors: colors, number-to-left: number-to-left)
     }
 }
 

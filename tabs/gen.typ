@@ -150,9 +150,10 @@
 
   if cur-bar.len() > 0 {
     bars.push(cur-bar)
-    if bars.at(-1) != ("\\") {
-      bars.push(("\\",))
-    }
+  }
+
+  if bars.len() > 0 and bars.at(-1) != ("\\") {
+    bars.push(("\\",))
   }
   return bars
 }

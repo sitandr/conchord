@@ -5,7 +5,8 @@
     colors: (shadow-barre: orange,
         grid: gray.darken(30%),
         hold: red,
-        barre: purple)
+        barre: purple,),
+    number-to-left: true
 )
 
 #set text(fill: purple)
@@ -13,3 +14,4 @@
 #box(crazy-chord("2,4,4,*", name: "Bm"))
 #box(crazy-chord("2,2,2, *"))
 #box(crazy-chord("x,3,2, !"))
+#box(crazy-chord("12,12,12, !"))

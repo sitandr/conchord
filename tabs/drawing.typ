@@ -4,7 +4,7 @@
 
 #let draw-lines(s-num, colors, y, x) = {
   {
-    on-layer(-1, {
+    on-layer(-2, {
       for i in range(s-num) {
         line((0, -(y + i)), (x, -(y + i)), stroke: colors.lines)
       }
@@ -12,15 +12,15 @@
   }
 }
 
-#let draw-bar(s-num, colors, x, y, width: 1.0) = {
+#let draw-bar(s-num, scale-length, colors, x, y, width: 1.0) = {
   on-layer(-1,
-  line((x, -y + 0.06), (x, -y - s-num + 1 - 0.06), stroke: width * 1.2pt + colors.bars)
+    line((x, -y + 0.06), (x, -y - s-num + 1 - 0.06), stroke: width * scale-length/0.3cm * 1.1pt + colors.bars)
   )
 }
 
-#let draw-column(colors, x, y) = {
-  circle((x, -y - 1.5), radius: 0.2, fill: gray, stroke: colors.bars)
-  circle((x, -y - 3.5), radius: 0.2, fill: gray, stroke: colors.bars)
+#let draw-column(s-num, colors, x, y) = {
+  circle((x, -y - (s-num - 1)/2 + 1), radius: 0.2, fill: colors.bars, stroke: colors.bars)
+  circle((x, -y - (s-num - 1)/2 - 1), radius: 0.2, fill: colors.bars, stroke: colors.bars)
 }
 
 #let draw-slur(colors, x, y, n-y, last-string-x) = {
@@ -103,21 +103,19 @@
 #let draw-vibrato(colors, x, y, n-y, dx) = {
   let n = int(dx/0.8)
   let points = for i in range(n) {
-    ((x + 0.8 * i, - (y  - 1)),
-    (x + 0.15 + 0.8 * i, - (y - 1.15)),
-    (x + 0.3 + 0.8 * i, - (y  - 1)),
-    (x + 0.45 + 0.8 * i, - (y - 0.8)),)
+    ((x + 0.8 * i, - (y  - 0.9)),
+    (x + 0.15 + 0.8 * i, - (y - 1.05)),
+    (x + 0.3 + 0.8 * i, - (y  - 0.9)),
+    (x + 0.45 + 0.8 * i, - (y - 0.7)),)
   }
   
   merge-path( {
     hobby(
       ..points, fill: black)
     hobby(
-      ..points.rev().map(el => (el.at(0) + 0.04, el.at(1) + 0.2)), fill: black)
+      ..points.rev().map(el => (el.at(0) + 0.04, el.at(1) - 0.2)), fill: black)
     },
-    
     stroke: none,
-    fill: black
+    fill: colors.connects
   )
-
 }
