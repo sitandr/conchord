@@ -13,7 +13,7 @@
   enable-scale: true,
   colors: (:),
   autoscale-max: 3.0,
-  autoscale-min: 0.9
+  autoscale-min: 0.9,
   debug-render: none,
   debug-numbers: false,
 ) = {
