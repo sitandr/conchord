@@ -1,6 +1,6 @@
 [package]
 name = "conchord"
-version = "0.1.1"
+version = "0.2.0"
 entrypoint = "lib.typ"
 authors = ["sitandr"]
 license = "MIT"
@@ -8,3 +8,4 @@ description = "Easily write lyrics with chords, generate chord diagrams and tabs
 exclude = ["examples"]
 repository = "https://github.com/sitandr/conchord"
 compiler = "0.8.0"
+keywords = ["music", "chord", "chords", "tab", "tablature", "tabulature", "guitar", "song"]
