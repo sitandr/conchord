@@ -1,11 +1,10 @@
 #import "@preview/cetz:0.2.0": canvas, draw
 #import "./gen.typ": gen
-
 #let new(
   tabs,
   preamble: none,
   extra: none,
-  eval-scope: none,
+  eval-scope: (:),
   scale-length: 0.3cm,
   s-num: 6,
   one-beat-length: 8,
@@ -17,6 +16,7 @@
   debug-render: none,
   debug-numbers: false,
 ) = {
+  let content_type = content
   let tabs = gen(tabs, s-num: s-num)
   let colors = (bars: gray, lines: gray, connects: luma(50%)) + colors
   
@@ -197,7 +197,7 @@
                   draft.const += 1.0
                 }
                  
-                if bar-index == draft.bar-start + 1 and tabs.at(draft.bar-start - 1).len() == 1 {
+                if draft.bar-start != 1 and bar-index == draft.bar-start + 1 and tabs.at(draft.bar-start - 1).len() == 1 {
                   // remove empty line
                   {
                     let _ = queque.pop()
@@ -311,10 +311,13 @@
               }
               
               if type(n) == array and n.at(0) == "##" {
+                assert(n.at(2) != none, message: "Empty content")
+                let result = eval(n.at(2), scope: eval-scope)
+                assert(type(result) == content_type or type(result) == str, message: "Eval result should be content or str, found " + type(result) + ": " + n.at(2))
                 queque.push({
                   content(
                     (x, -y + 1),
-                    eval(n.at(2), scope: eval-scope),
+                    result,
                     anchor: if n.at(1).len() > 0 { n.at(1) } else { none },
                   )
                 })

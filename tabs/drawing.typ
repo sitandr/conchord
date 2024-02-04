@@ -39,11 +39,11 @@
   let dy = fret.fret - last-tab-x.at(n-y - 1)
   dy = sign(dy) * 0.2
 
-  line(
+  on-layer(-1, line(
     (last-string-x.at(n-y - 1) + 0.6, y - dy),
     (x, y + dy),
     stroke: colors.connects,
-  )
+  ))
 }
 
 #let scale-fret-numbers(
@@ -64,9 +64,9 @@
 #let draw-bend(colors, x, y, n-y, dx, bend-return, bend-text) = {
   let alpha = if bend-return {0.4} else {0.8}
           
-  bezier(
+  on-layer(-1, bezier(
     (x + 0.5, - (y + n-y - 1)),
-    (x+alpha*dx, - (y - 1)),
+    (x+alpha*dx, - (y - 1.2)),
     (x+alpha*dx*0.8, - (y + n-y - 1)),
     (x+alpha*dx, - (y + n-y - 1)),
     stroke: colors.connects,
@@ -77,7 +77,7 @@
         length: 0.5, 
         angle: 30deg, 
         flex: false))
-  )
+  ))
   content(
     (x + alpha*dx, -y + 1.2),
     raw(str(bend-text)),
