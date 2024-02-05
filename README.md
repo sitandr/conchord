@@ -74,7 +74,7 @@ Brief comparison may be seen there, some concepts explained below:
 ![](examples/compare.png)
 
 ## Think about frets, not layout
-Write frets for chord as you hold it, like a string like "123456" (see examples above). You don't need to think about layouting and substracting frets, `conchord` does it for you.
+Write frets for chord as you hold it, like a string like "123456" (see examples above). You don't need to think about layouting and subtracting frets, `conchord` does it for you.
 
 > NOTE: I can't guarantee that will be the best chord layout. Moreover, the logic is quite simple: e.g., barre can't be multiple and can't be put anywhere except first bar in the image. However, surprisingly, it works well in almost all of the common cases, so the exceptions are really rare.
 

@@ -4,8 +4,8 @@
 // For better png in README
 #set page(height: auto)
 
-#let standart-chord = new-chordgen()
-#let chord(tabs, name) = box(standart-chord(tabs, name: name), inset: 0.3em)
+#let standard-chord = new-chordgen()
+#let chord(tabs, name) = box(standard-chord(tabs, name: name), inset: 0.3em)
 
 #set page(margin: (right: 40%))
 
