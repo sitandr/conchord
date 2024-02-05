@@ -6,7 +6,7 @@
     scale-length: 1pt, 
     colors: (:), number-to-left: false) = {
     /// IMPORTANT: for the convinience there all strings are numbered FROM THE TOP (e.g. A will be 1)
-    /// hold: array of coords of positions holded; string first, then shift"
+    /// hold: array of coords of positions held; string first, then shift"
     /// open: array of numbers of opened strings
     /// muted: array of numbers for muted
     /// fret-number: the starting fret
@@ -18,7 +18,7 @@
     /// - grid: color of grid, default is `gray.darken(20%)`
     /// - open: color of circles for open strings, default is `black`
     /// - muted: color of crosses for muted strings, default is `black`
-    /// - hold: color of holded positions, default is #5d6eaf
+    /// - hold: color of held positions, default is #5d6eaf
     /// - barre: color of main barre part, default is #5d6eaf
     /// - shadow-barre: color of "unnecessary" barre part, default is #5d6eaf.lighten(30%)
     /// colors and other properties of fret and chord name you can specify using show rules for text and raw (fret is `raw`) 
@@ -56,7 +56,7 @@
         grid((5, -63), (string-number*10 - 5, -13), step: 10, name: "grid")
 
         for p in hold {
-            assert(p.at(1) < 6, message: "Unable to render chord. Holded position (" + repr(p) + ") is too far away.")
+            assert(p.at(1) < 6, message: "Unable to render chord. Held position (" + repr(p) + ") is too far away.")
             circle((p.at(0)*10 + 5, -8 - p.at(1) * 10), radius: 3, fill: colors.at("hold", default: default-blue), stroke: none)
         }
 

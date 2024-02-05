@@ -5,10 +5,10 @@
 
 # Overview
 
-`conchord` makes it easy to add new chords, both for diagrams and lyrics. Unlike [chordx](https://github.com/ljgago/typst-chords), you don't need to think about layout and pass lots of arrays for drawing barres. Just pass a string with holded frets and it will work:
+`conchord` makes it easy to add new chords, both for diagrams and lyrics. Unlike [chordx](https://github.com/ljgago/typst-chords), you don't need to think about layout and pass lots of arrays for drawing barres. Just pass a string with held frets and it will work:
 
 ```typst
-#import "@preview/conchord:0.1.0": new-chordgen, overchord
+#import "@preview/conchord:0.2.0": new-chordgen, overchord
 
 #let chord = new-chordgen()
 
@@ -76,7 +76,7 @@ Brief comparison may be seen there, some concepts explained below:
 ## Think about frets, not layout
 Write frets for chord as you hold it, like a string like "123456" (see examples above). You don't need to think about layouting and substracting frets, `conchord` does it for you.
 
-> NOTE: I can't guarantee that will be the best chord layout. Moreover, the logic is quite simple: e.g., barre can't be multiple and can't be put anwhere except first bar in the image. However, surprisingly, it works well in almost all of the common cases, so the exceptions are really rare.
+> NOTE: I can't guarantee that will be the best chord layout. Moreover, the logic is quite simple: e.g., barre can't be multiple and can't be put anywhere except first bar in the image. However, surprisingly, it works well in almost all of the common cases, so the exceptions are really rare.
 
 If you need to create something too _custom/complex_ ~~(but not _concise_)~~, maybe it is worth to try [chordx](https://github.com/ljgago/typst-chords). You can also try using core function `render-chord` for more manual control, but it is still limited by one barre starting from one (but that barre may be shifted). If you think that feature should be supported, you can create issue there.
 
@@ -85,10 +85,10 @@ Some chord generators put barre only where it _ought to_ be (any less will not h
 
 
 ## Name auto-scaling
-Chord name font size is _reduced_ for _large_ chord names, so the name fits well into chord diagram (see example above). That makes it much more pretty to stack several chords together. To achieve chordx-like behaviour, you can always use `#figure(chord("…"), caption: …)`.
+Chord name font size is _reduced_ for _large_ chord names, so the name fits well into chord diagram (see example above). That makes it much more pretty to stack several chords together. To achieve chordx-like behavior, you can always use `#figure(chord("…"), caption: …)`.
 
 ## Easier chords for lyrics
-Just add chord labels above lyrics in arbitrary place, don't think about what letter exactly it should be located. By default it aligns the chord label to the left, so it produces pretty results out-of-box. You can pass other alignments to `alignment` argument, or use the chords stright inside words.
+Just add chord labels above lyrics in arbitrary place, don't think about what letter exactly it should be located. By default it aligns the chord label to the left, so it produces pretty results out-of-box. You can pass other alignments to `alignment` argument, or use the chords straight inside words.
 
 The command is _much_ simpler than chordx (of course, it is a trade-off):
 ```typst
@@ -107,9 +107,15 @@ Customize the colors of chord elements. `new-chordgen` accepts the `colors` dict
   - `grid`: color of grid, default is `gray.darken(20%)`
   - `open`: color of circles for open strings, default is `black`
   - `muted`: color of crosses for muted strings, default is `black`
-  - `hold`: color of holded positions, default is `#5d6eaf`
+  - `hold`: color of held positions, default is `#5d6eaf`
   - `barre`: color of main barre part, default is `#5d6eaf`
   - `shadow-barre`: color of "unnecessary" barre part, default is `#5d6eaf.lighten(30%)`
+
+### Customizing text
+
+**Important**: _frets_ are rendered using `raw` elements. So if you want to customize their font or color, please use `#show raw: set text(fill: ...)` or similar things.
+
+The chord's name, on the other hand, uses default font, so to set it, just use `#set text(font: ...)` in the corresponding scope.
 
 ## Assertions
 
@@ -137,7 +143,7 @@ Currently [chordx](https://github.com/ljgago/typst-chords) has almost no checks 
 #tabs.new(```
 2/4 2/4-3 2/4-2 2/4-3 |
 2/4-2 2/4-3 2/4 2/4 2/4 |
-2/4-2 p 0/2-3 3/2-2 
+2/4-2 p 0/2-3 3/2-2
 |:
 
 0/1+0/6 0/1 0/1-3 2/1 | 3/1+3/5-2 3/1 3/1-3 5/1 | 2/1+0/4-2 2/1 0/1-3 3/2-3 | \ \
@@ -155,7 +161,7 @@ p-2
 |
 2/1-3
 2/1
-3/1 0/1 2/1-2 p-3 0/2-3 3/2-3 
+3/1 0/1 2/1-2 p-3 0/2-3 3/2-3
 ##
   ending[2.]
 ##west
@@ -179,7 +185,7 @@ Not a lot customization is available yet, but something is already possible:
 #tabs.new("0/1+2/5-1 ^0/1+`3/5-2.. 2/3 |: 2/3-1 2/3 2/3 | 3/3 ||",
   scale-length: 0.2cm,
   one-beat-length: 12,
-  s-num: 5, 
+  s-num: 5,
   colors: (
     lines: gradient.linear(yellow, blue),
     bars: green,
@@ -193,7 +199,7 @@ As you can see from example, you can use raw strings or code blocks to write tab
 
 The general idea is very simple: to write a number on some line, write `<fret number>/<string>`.
 
-**Spaces are important!** All notes and special symbols work well only if properly separated. 
+**Spaces are important!** All notes and special symbols work well only if properly separated.
 
 ### Duration
 
@@ -223,7 +229,6 @@ Add `b` after note, but before the duration (e.g. `2/3b-2`) to add a bend. After
 
 Adding vibratos works the same way, via adding `v` to the note. The length of vibrato will be the same as the length of the note.
 
-
 Unfortunately, they are all supported things for now. But wait, there is still one cool thing left!
 
 ### Custom content
@@ -242,6 +247,4 @@ Additionally, if you enjoy drawing missing things, you can also use `preamble` a
 2. Add more signs&lines
 3. Add more built-in things to attach above tabs
 
-It is far from what I want to do, so maybe there will be much more! I will be very glad to receive any feedback.
-
-I also want to try creating roughly the same thing for musical notation in general, but it is a much bigger task.
+It is far from what I want to do, so maybe there will be much more! I will be very glad to receive _any feedback_, both issues and PR-s are very welcome (though I can't promise I will be able to work on it immediately)!
