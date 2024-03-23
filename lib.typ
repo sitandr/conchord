@@ -5,7 +5,7 @@
   barre: 0, barre-shift: 0, shadow-barre: 0, string-number: 6,
   scale-length: 1pt, 
   colors: (:), number-to-left: false) = {
-  /// IMPORTANT: for the convinience there all strings are numbered FROM THE TOP (e.g. A will be 1)
+  /// IMPORTANT: for the convenience there all strings are numbered FROM THE TOP (e.g. A will be 1)
   /// hold: array of coords of positions held; string first, then shift"
   /// open: array of numbers of opened strings
   /// muted: array of numbers for muted
@@ -124,7 +124,7 @@
   /// "x" (mute) and numbers are accepted
   /// name: name of chord
   /// string-number: total number of strings instrument has
-  /// force-barre: 0 → standart algorithm, 1 → force add barre, -1 → force avoid barre
+  /// force-barre: 0 → standard algorithm, 1 → force add barre, -1 → force avoid barre
   /// inside the same fret (default no)
 
   assert(tabs.len() == string-number, message: "expected " + str(string-number) + " frets, found " + str(tabs.len()))
