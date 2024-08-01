@@ -46,6 +46,21 @@
   )
 }
 
+#let parse_rep(s, s-num: 6) = {
+  let res = s.match(regex("^r\((.*)\)$"))
+
+  if res != none {
+    let split = res.captures.at(0).split(",")
+    if split.len() == 2 {
+      let note-and-dur = split.at(0).split("-")
+      let reps = split.at(1)
+      return (parse-note(note-and-dur.at(0), s-num: s-num), to-int(note-and-dur.at(1, default: "0")), to-int(reps))
+    }
+  }
+
+  panic("Could not parse repetition")
+}
+
 #let gen(s, s-num: 6) = {
   if type(s) == "content" {
     s = s.text
@@ -127,6 +142,18 @@
     }
 
     if n == "" {
+      continue
+    }
+
+    if n.starts-with("r(") {
+      let res = parse_rep(n, s-num: s-num)
+      let note = res.at(0)
+      let dur = res.at(1)
+      let reps = res.at(2)
+
+      for _ in range(0, reps) {
+        cur-bar.push((notes: note, duration: dur))
+      }
       continue
     }
 
