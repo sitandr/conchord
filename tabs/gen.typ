@@ -1,5 +1,5 @@
 #let to-int(s) = {
-  if s.matches(regex("^\d+$")).len() != 0 { int(s) } else { panic("Bad number: " + s) }
+  if s.matches(regex("^\d+$")).len() != 0 { int(s) } else { if s == "x" {s} else {panic("Bad number: " + s) }}
 }
 
 #let parse-note(n, s-num: 6) = {
