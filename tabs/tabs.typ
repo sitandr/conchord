@@ -1,5 +1,6 @@
-#import "@preview/cetz:0.2.0": canvas, draw
+#import "@preview/cetz:0.3.0": canvas, draw
 #import "./gen.typ": gen
+
 #let new(
   tabs,
   preamble: none,
@@ -316,7 +317,7 @@
                 assert(type(result) == content_type or type(result) == str, message: "Eval result should be content or str, found " + type(result) + ": " + n.at(2))
                 queque.push({
                   content(
-                    (x, -y + 1),
+                    (x, -y + 1.2),
                     result,
                     anchor: if n.at(1).len() > 0 { n.at(1) } else { none },
                   )
@@ -346,6 +347,7 @@
                     draw-slide(x, y, n-y, last-string-x, fret, last-tab-x)
                   }
                   
+                  // the place where the frets are really drawn
                   content(
                     (x, - (y + n-y - 1)),
                     scale-fret-numbers(fret.fret, n.duration, draft.alpha),

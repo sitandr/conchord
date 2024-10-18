@@ -66,7 +66,7 @@
           
   on-layer(-1, bezier(
     (x + 0.5, - (y + n-y - 1)),
-    (x+alpha*dx, - (y - 1.2)),
+    (x+alpha*dx, - (y - 1)),
     (x+alpha*dx*0.8, - (y + n-y - 1)),
     (x+alpha*dx, - (y + n-y - 1)),
     stroke: colors.connects,
