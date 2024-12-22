@@ -55,6 +55,12 @@
     stroke(colors.at("grid", default: gray.darken(20%)) + scale-length)
     grid((5, -63), (string-number*10 - 5, -13), step: 10, name: "grid")
 
+    if fret-number == 0 {
+      fill(colors.at("grid", default: gray.darken(20%)))
+      stroke(none)
+      rect((4.5, -13), (string-number*10 - 4.5, -11))
+    }
+
     for p in hold {
       assert(p.at(1) < 6, message: "Unable to render chord. Held position (" + repr(p) + ") is too far away.")
       circle((p.at(0)*10 + 5, -8 - p.at(1) * 10), radius: 3, fill: colors.at("hold", default: default-blue), stroke: none)
