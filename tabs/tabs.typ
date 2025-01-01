@@ -1,6 +1,11 @@
 #import "@preview/cetz:0.3.0": canvas, draw
 #import "./gen.typ": gen
 
+#let draw-bar-rhytm(
+  bar-notes,
+
+) = {}
+
 #let new(
   tabs,
   preamble: none,
@@ -9,20 +14,27 @@
   scale-length: 0.3cm,
   s-num: 6,
   one-beat-length: 8,
-  line-spacing: 2,
+  line-spacing: 3,
   enable-scale: true,
   colors: (:),
   autoscale-max: 3.0,
   autoscale-min: 0.9,
+  draw-rhythm: false,
   debug-render: none,
   debug-numbers: false,
 ) = {
   let content_type = content
+  let line-spacing = line-spacing
+  if draw-rhythm {
+    line-spacing += 2
+  }
   let tabs = gen(tabs, s-num: s-num)
   let colors = (bars: gray, lines: gray, connects: luma(50%)) + colors
   
   layout(
     size => {
+      // copy variable to function
+      let tabs = tabs
       let width = size.width / scale-length * 0.95
       
       let calculate-alpha(draft) = {
@@ -51,6 +63,7 @@
           scale-fret-numbers = scale-fret-numbers.with(scale-length, one-beat-length, colors)
           draw-bend = draw-bend.with(colors)
           draw-vibrato = draw-vibrato.with(colors)
+          draw-bar-rhythm = draw-bar-rhythm.with(colors)
           
           if preamble != none { preamble }
           
@@ -79,12 +92,12 @@
           // let ftabs = tabs.map(arr => arr.map(i => {if type(i) != str {"n"} else {i}}).join())
           let counter-lim = 0
           let debug-render = debug-render
-          
-          let tabs = tabs
+
+          // bar iteration
           while bar-index < tabs.len() {
             let bar = tabs.at(bar-index)
             bar-index += 1
-            
+          
             if debug-render != none and counter-lim > debug-render {
               break
             }
@@ -95,7 +108,11 @@
               }
             }
             
+            // rhythm thing: store all notes in bar
+            let bar-notes = ()
             let note-index = 0
+
+            // note iteration
             while note-index < bar.len() {
               let n = bar.at(note-index)
               note-index += 1
@@ -185,6 +202,11 @@
               }
               
               if n == "\\" {
+                if draw-rhythm {
+                  let rhythm = draw-bar-rhythm(bar-notes, y)
+                  if rhythm != none {queque.push(rhythm)}
+                }
+                bar-notes = ()
                 if last-sign == "||" {
                   x -= 0.3
                   draft.const -= 0.3
@@ -353,6 +375,8 @@
                     scale-fret-numbers(fret.fret, n.duration, draft.alpha),
                     anchor: "west",
                   )
+
+                  bar-notes.push((x, n.duration))
                   
                   if fret.bend != none {
                     draw-bend(x, y, n-y, dx, fret.bend-return, fret.bend)
@@ -367,6 +391,10 @@
                 last-sign = "n"
               }
               x += dx
+            }
+            if draw-rhythm {
+              let rhythm = draw-bar-rhythm(bar-notes, y)
+              if rhythm != none {queque.push(rhythm)}
             }
             x += 0.5
             draft.const += 0.5

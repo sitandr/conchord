@@ -119,3 +119,21 @@
     fill: colors.connects
   )
 }
+
+// draw bar rhythm
+
+#let draw-bar-rhythm(colors, bar-notes, y) = {
+  let grouping = 2
+  for (nx, dur) in bar-notes {
+    let nx = nx + 0.3
+    line(
+      (nx, - y - 7), (nx, -y - 6), stroke: colors.connects)
+
+    
+    for n in range(int(dur)) {
+      let y =  -y - 7 + n*0.2
+      line(
+        (nx - 0.04, y), (nx + 0.4, y), stroke:  colors.connects)
+    }
+  }
+}

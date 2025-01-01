@@ -7,6 +7,7 @@
 #let ending(n) = {
     rect(stroke: (left: black, top: black), inset: 0.2em, n + h(3em))
 }
+
 *This thing doesn't follow musical notation rules, it is used just for demonstration purposes*:
 
 #tabs.new(```
@@ -43,7 +44,7 @@ p-2
 | 2/3 2/3 8/3 7/3 6/3 5/3 4/3 2/3  5/3 8/3 9/3  7/3 2/3 | 2/3 2/2 2/3 2/4 |
 10/1-3 10/1-3 10/1-3 10/1-4 10/1-4 10/1-4 10/1-4 10/1-5. 10/1-5. 10/1-5 10/1-5 10/1-2 \
 1/3bfullr+2/5-2 1/2b1/2-1 2/3v-1
-```, eval-scope: (chord: chord, ending: ending)
+```, eval-scope: (chord: chord, ending: ending), draw-rhythm: true
  )
 
 
