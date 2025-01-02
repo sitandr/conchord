@@ -1,4 +1,4 @@
-#import "@preview/chordx:0.2.0": *
+#import "@preview/chordx:0.5.0": *
 #import "../lib.typ": new-chordgen, overchord
 
 #set page(height: auto, margin: 1em)
@@ -20,27 +20,27 @@
   [
     // Chordx chords are smaller, so for better
     // comparison need to make it smaller
-    #let chord = new-chordgen()//scale-length: 0.6pt)
+    #let chord = new-chordgen(number-to-left: true)//scale-length: 0.6pt)
     #chord("x, 6, 10, 7, 9, 6", name: "D#maj7sus4add13")
   ],
   [chordx],
   [
     ```typst
-    #let chord = new-chart-chords()
+    #let chord = chart-chord.with(size: 1.5em, design: "round")
 
     #chord(
-      capos: (("115"),),
-      fret-number: 6,
+      capos: "115",
+      fret: 6,
       tabs: "xn524n"
     )[D\#maj7sus4add13]
     ```
   ],
   [
-    #let chord = new-chart-chords()
+    #let chord = chart-chord.with(size: 1.5em, design: "round")
 
     #chord(
-      capos: ("115"),
-      fret-number: 6,
+      capos: "115",
+      fret: 6,
       tabs: "xn524n"
     )[D\#maj7sus4add13]
   ],
@@ -66,14 +66,14 @@
   [chordx],
   [
     ```typst
-    #let chord = new-single-chords(weight: "semibold")
+    #let chord = single-chord.with(weight: "semibold")
 
     #chord[Jingle][G][2] bells, jingle bells, jingle #chord[all][C][2] the #chord[way!][G][2] \
     #chord[Oh][C][] what fun it #chord[is][G][] to ride
     ```
   ],
   [
-    #let chord = new-single-chords(weight: "semibold")
+    #let chord = single-chord.with(weight: "semibold")
 
     #chord[Jingle][G][2] bells, jingle bells, jingle #chord[all][C][2] the #chord[way!][G][2] \
     #chord[Oh][C][] what fun it #chord[is][G][] to ride

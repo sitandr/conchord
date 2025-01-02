@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.0": canvas, draw
+#import "@preview/cetz:0.3.1": canvas, draw
 #import "./gen.typ": gen
 
 #let draw-bar-rhytm(
@@ -26,7 +26,7 @@
   let content_type = content
   let line-spacing = line-spacing
   if draw-rhythm {
-    line-spacing += 2
+    line-spacing += 1
   }
   let tabs = gen(tabs, s-num: s-num)
   let colors = (bars: gray, lines: gray, connects: luma(50%)) + colors
@@ -339,7 +339,7 @@
                 assert(type(result) == content_type or type(result) == str, message: "Eval result should be content or str, found " + type(result) + ": " + n.at(2))
                 queque.push({
                   content(
-                    (x, -y + 1.2),
+                    (x, -y + 1),
                     result,
                     anchor: if n.at(1).len() > 0 { n.at(1) } else { none },
                   )
@@ -369,7 +369,6 @@
                     draw-slide(x, y, n-y, last-string-x, fret, last-tab-x)
                   }
                   
-                  // the place where the frets are really drawn
                   content(
                     (x, - (y + n-y - 1)),
                     scale-fret-numbers(fret.fret, n.duration, draft.alpha),
