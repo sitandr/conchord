@@ -4,7 +4,9 @@
 #let render-chord(hold, open, muted, fret-number, name,
   barre: 0, barre-shift: 0, shadow-barre: 0, string-number: 6,
   scale-length: 1pt, 
-  colors: (:), number-to-left: false) = {
+  colors: (:), 
+  number-to-left: false,
+  thick-nut: true) = {
   /// IMPORTANT: for the convenience there all strings are numbered FROM THE TOP (e.g. A will be 1)
   /// hold: array of coords of positions held; string first, then shift"
   /// open: array of numbers of opened strings
@@ -55,7 +57,7 @@
     stroke(colors.at("grid", default: gray.darken(20%)) + scale-length)
     grid((5, -63), (string-number*10 - 5, -13), step: 10, name: "grid")
 
-    if fret-number == 0 {
+    if fret-number == 0 and thick-nut {
       fill(colors.at("grid", default: gray.darken(20%)))
       stroke(none)
       rect((4.5, -13), (string-number*10 - 4.5, -11))
@@ -124,7 +126,7 @@
   })
 }
 
-#let generate-chord(tabs, name: "", string-number: 6, force-barre: 0, use-shadow-barre: true, scale-length: 1pt, colors: (:), number-to-left: false) = {
+#let generate-chord(tabs, name: "", string-number: 6, force-barre: 0, use-shadow-barre: true, scale-length: 1pt, colors: (:), number-to-left: false, thick-nut: true) = {
   /// generates image with really simple rules
   /// tab: ARRAY of six elements (not a string);
   /// "x" (mute) and numbers are accepted
@@ -196,7 +198,7 @@
     fret-number = min-fret;
   }
 
-  return render-chord(hold, open, muted, fret-number, name, barre: barre, barre-shift: 0, shadow-barre: shadow-barre, string-number: string-number, colors: colors, scale-length: scale-length, number-to-left: number-to-left)
+  return render-chord(hold, open, muted, fret-number, name, barre: barre, barre-shift: 0, shadow-barre: shadow-barre, string-number: string-number, colors: colors, scale-length: scale-length, number-to-left: number-to-left, thick-nut: thick-nut)
 }
 
 
@@ -228,10 +230,10 @@
 }
 
 
-#let new-chordgen(string-number: 6, use-shadow-barre: true, scale-length: 1pt, colors: (:), number-to-left: false) = {
+#let new-chordgen(string-number: 6, use-shadow-barre: true, scale-length: 1pt, colors: (:), number-to-left: false, thick-nut: true) = {
   (tabstring, name: " ") => {
     let (tabs, force-barre) = parse-tabstring(tabstring)
-    generate-chord(tabs, name: name, string-number: string-number, force-barre: force-barre, use-shadow-barre: use-shadow-barre, scale-length: scale-length, colors: colors, number-to-left: number-to-left)
+    generate-chord(tabs, name: name, string-number: string-number, force-barre: force-barre, use-shadow-barre: use-shadow-barre, scale-length: scale-length, colors: colors, number-to-left: number-to-left, thick-nut: thick-nut)
   }
 }
 
