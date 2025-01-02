@@ -6,7 +6,8 @@
         grid: gray.darken(30%),
         hold: red,
         barre: purple,),
-    number-to-left: true
+    number-to-left: true,
+    thick-nut: false
 )
 
 #set text(fill: purple)

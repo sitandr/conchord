@@ -26,18 +26,23 @@
 It is easy to customize the colors and styles of chords with `colors` argument and `show` rules for text. You can also put `!` and `*` marks in the end of the string to force diagram generation. `!` forces barre, `*` removes it:
 
 ```typst
-#let custom-chord = new-chordgen(string-number: 3,
+#let crazy-chord = new-chordgen(string-number: 3,
     colors: (shadow-barre: orange,
         grid: gray.darken(30%),
         hold: red,
-        barre: purple)
+        barre: purple,),
+    // bar number displayed to left
+    number-to-left: true,
+    // disable thick first line when chord played without shift
+    thick-nut: false
 )
 
 #set text(fill: purple)
-#box(custom-chord("320", name: "C"))
-#box(custom-chord("2,4,4,*", name: "Bm"))
-#box(custom-chord("2,2,2, *"))
-#box(custom-chord("x,3,2, !"))
+#box(crazy-chord("320", name: "C"))
+#box(crazy-chord("2,4,4,*", name: "Bm"))
+#box(crazy-chord("2,2,2, *"))
+#box(crazy-chord("x,3,2, !"))
+#box(crazy-chord("12,12,12, !"))
 ```
 
 ![](examples/crazy.png)
