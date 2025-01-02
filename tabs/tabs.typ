@@ -1,11 +1,6 @@
 #import "@preview/cetz:0.3.1": canvas, draw
 #import "./gen.typ": gen
 
-#let draw-bar-rhytm(
-  bar-notes,
-
-) = {}
-
 #let new(
   tabs,
   preamble: none,

@@ -8,7 +8,6 @@
     rect(stroke: (left: black, top: black), inset: 0.2em, n + h(3em))
     v(0.5em)
 }
-
 *This thing doesn't follow musical notation rules, it is used just for demonstration purposes*:
 
 #tabs.new(```
