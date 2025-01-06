@@ -28,7 +28,9 @@ What can you do with this package?
 1. [Conchord](#conchord)
 2. [Overview](#overview)
    1. [Chord generation](#chord-generation)
-   2. [Chord drawing](#chord-drawing)
+   2. [Drawing chords](#drawing-chords)
+      1. [Custom chords](#custom-chords)
+      2. [Song sheets](#song-sheets)
 3. [Features](#features)
    1. [Think about frets, not layout](#think-about-frets-not-layout)
    2. [Shadow barre](#shadow-barre)
@@ -44,15 +46,19 @@ What can you do with this package?
       4. [Ties and slides](#ties-and-slides)
    1. [Bends and vibratos](#bends-and-vibratos)
       1. [Custom content](#custom-content)
-      2. [Plans](#plans)
+5. [Plans](#plans)
 
 <!-- tocstop -->
 
 ## Chord generation
 
-## Chord drawing
+## Drawing chords
 
-`conchord` makes it easy to add new chords, both for diagrams and lyrics. Unlike [chordx](https://github.com/ljgago/typst-chords), you don't need to think about layout and pass lots of arrays for drawing barres. Just pass a string with held frets and it will work:
+### Custom chords
+
+The 
+
+`conchord` makes it easy to add new chords, both for diagrams and lyrics. For custom chords you don't need to think about layout and pass lots of arrays for drawing barres. Just pass a string with held frets and it will work:
 
 ```typst
 #import "@preview/conchord:0.2.0": new-chordgen, overchord
@@ -95,6 +101,9 @@ It is easy to customize the colors and styles of chords with `colors` argument a
 ![](examples/crazy.png)
 
 > NOTE: be careful when using **!**, if barre cannot be used, it will result into nonsense.
+
+
+### Song sheets
 
 For lyrics, you don't need to add chord to word and specify the number of char in words (unlike [chordx](https://github.com/ljgago/typst-chords)). Simply add `#overchord` to the place you want a chord. Compose with native Typst stylistic things for non-plain look (you don't need to dig into [chordx](https://github.com/ljgago/typst-chords)'s custom arguments):
 
@@ -293,10 +302,16 @@ You can set align of these elements by writing cetz anchors after the second (e.
 
 Additionally, if you enjoy drawing missing things, you can also use `preamble` and `extra` arguments in `tabs.new` where you can put any `cetz` inner things (tabs uses canvas, and that allow you drawing on it) before or after the tabs are drawn.
 
-### Plans
+# Plans
 
-1. Add _(optional)_ "rhythm section" under tabs
-2. Add more signs&lines
-3. Add more built-in things to attach above tabs
+There are lots of possible things to add to this package. With power of WASM engine quite anything is possible.
 
-It is far from what I want to do, so maybe there will be much more! I will be very glad to receive _any feedback_, both issues and PR-s are very welcome (though I can't promise I will be able to work on it immediately)!
+1. Improve chord complexity evaluation for WASM
+2. Add fingering rendering (contributions welcome!) and generation.
+3. Add piano chords
+4. Add chord detection (generate names from tab strings).
+5. Further development of tabs. Add more built-in things to use, improve language, rendering and so on.
+
+If you are interested in any of this, please create an issue or "vote" with reactions on existing one. That would make it much probable that I would work on this.
+
+In general, I will be very glad to receive _any feedback_, both issues and PR-s are very welcome (though I can't promise I will be able to work on it _immediately_)!
