@@ -1,4 +1,4 @@
-#import "tabs/tabs.typ": canvas, draw
+#import "../tabs/tabs.typ": canvas, draw
 
 #let render-chord(hold, open, muted, fret-number, name,
   barre: 0, barre-shift: 0, shadow-barre: 0, string-number: 6,
@@ -240,8 +240,13 @@
 
 
 #let new-chordgen(string-number: 6, use-shadow-barre: true, scale-length: 1pt, colors: (:), number-to-left: false, thick-nut: true) = {
-  (tabstring, name: " ") => {
+  (tabstring, name: " ", scale-l: none) => {
     let (tabs, force-barre) = parse-tabstring(tabstring)
-    generate-chord(tabs, name: name, string-number: string-number, force-barre: force-barre, use-shadow-barre: use-shadow-barre, scale-length: scale-length, colors: colors, number-to-left: number-to-left, thick-nut: thick-nut)
+    generate-chord(tabs, name: name, string-number: string-number, force-barre: force-barre, use-shadow-barre: use-shadow-barre, scale-length: if scale-l != none {scale-l} else {scale-length}, colors: colors, number-to-left: number-to-left, thick-nut: thick-nut)
   }
+}
+
+// the width of the chord diagram will be this * scape-length
+#let get-chordgram-width-scale(n-strings) = {
+  ((n-strings + 1)*10 + 5)
 }

@@ -1,9 +1,56 @@
 # Conchord
 > Notice: I'm preparing the update, so the documentation there is referring to the new version.
 
-`conchord` (concise chord) is a [Typst](https://github.com/typst/typst) package to write lyrics with chords and generate colorful fretboard diagram (aka chord diagram). From `0.1.1` there is also experimental tabs support (though quite simple and unstable yet). It is inspired by [chordx](https://github.com/ljgago/typst-chords) package and my previous tiny project for generating chord diagrams SVG-s.
+`conchord` (concise chord) is a [Typst](https://github.com/typst/typst) package for string instruments.
+
+What can you do with this package?
+
++ Write up a song with it's chords you liked into Typst format in quite a pretty and simple way.
+
++ Explore all the possible ways to play some chord with your special tuning of your special string instrument (like ukulele, bass guitar, mandolin or anything else).
+
+  > Conchord embeds a [simple music theory engine](https://github.com/sitandr/conchord-gen) through WASM to interpret chord names and dynamically generate all possible chord tablatures. It also uses some simple heuristics to find the best ones. _Sometimes they may be not the most popular ones._
+
+  > That means conchord doesn't predefine anything, it can come up with any chords for any tuning and instrument!
+
++ Use this exploration of ways to play a chord to come up with and write up the best way to play your song (very few services allow that). Of course, you can define your own chords without using the engine.
+
++ Quickly write tabs for your music with compact special tab language. There are still some limitations, but it's possible to write basically anything tab-related with some effort.
+
++ Easily transpose any part of your songs, change the tuning and instrument and get an instant update of your song chord library (the place where the diagrams are displayed).
+
++ Write "a book" of compositions with their individual chord libraries.
++ And many more!
 
 # Overview
+
+<!-- toc -->
+1. [Conchord](#conchord)
+2. [Overview](#overview)
+   1. [Chord generation](#chord-generation)
+   2. [Chord drawing](#chord-drawing)
+3. [Features](#features)
+   1. [Think about frets, not layout](#think-about-frets-not-layout)
+   2. [Shadow barre](#shadow-barre)
+   3. [Name auto-scaling](#name-auto-scaling)
+   4. [Easier chords for lyrics](#easier-chords-for-lyrics)
+   5. [Colors](#colors)
+      1. [Customizing text](#customizing-text)
+   6. [Assertions](#assertions)
+4. [Tabs](#tabs)
+      1. [Duration](#duration)
+      2. [Bars and repetitions](#bars-and-repetitions)
+      3. [Linebreaks](#linebreaks)
+      4. [Ties and slides](#ties-and-slides)
+   1. [Bends and vibratos](#bends-and-vibratos)
+      1. [Custom content](#custom-content)
+      2. [Plans](#plans)
+
+<!-- tocstop -->
+
+## Chord generation
+
+## Chord drawing
 
 `conchord` makes it easy to add new chords, both for diagrams and lyrics. Unlike [chordx](https://github.com/ljgago/typst-chords), you don't need to think about layout and pass lots of arrays for drawing barres. Just pass a string with held frets and it will work:
 

@@ -1,72 +1,53 @@
-// "../lib.typ" should be replaced with "@preview/conchord:0.1.0" if used outside of package
-#import "../lib.typ": new-chordgen, overchord
+#import "../lib.typ": new-chordgen, overchord, chordlib, chordify, change-tonality, sized-chordlib, change-tonality
+
+#let chord = new-chordgen(string-number: auto)
 
 // For better png in README
-#set page(height: auto)
+#set page(height: auto, margin: (right: 0%))
 
-#let standard-chord = new-chordgen()
-#let chord(tabs, name) = box(standard-chord(tabs, name: name), inset: 0.3em)
+#show: chordify
 
-#set page(margin: (right: 40%))
-
-#place(right, dx: 70%,
-    block(width: 70%,
-        block(stroke: gray + 0.2pt, inset: 1em, below: 3em)[
-            #set align(left)
-
-            // Make all text in chord graph bold
-            #show text: strong
-
-            // List used chords there
-            #chord("022000", "Em")
-            #chord("x32010", "C") 
-            #chord("320003", "G")
-            #chord("xx0232", "D")
-        ]
-    )
-)
-
-
-#align(center)[
+#h(1fr)#box[
+    #set align(center)
     // Song name
     = Zombie
     // Band
     == The Cranberries
-]
+]#h(5fr)
 
-#let och(it) = overchord(strong(it))
+#place(right, dx: -1em, {
+    set align(left)
+    // Make all text in chord graph bold
+    show text: strong
+    // List of used chords there
+    sized-chordlib(heading-level: 2, width: 100pt, switch: (D: 3), at: (A: 5))
+})
 
-=== #raw("[Verse 1]")
 
-#och[Em] Another head 
-#och[C] hangs lowly \
-#och[G] Child is slowly
-#och[D] taken \
-#och[Em] And the violence
-#och[C] caused such silence \
-#och[G] Who are we
-#och[D] mistaken?
+=== #raw("[[Verse 1]]")
 
-=== #raw("[Pre-Chorus]")
+[Em] Another [C] head hangs lowly \
+[G]  Child is slowly [D] taken \
+[Em] And the violence [C] caused such silence \
+[G]  Who are we [D] mistaken?
 
-#och[Em] But you see, it's not me,
-#och[C] it's not my family \
-#och[G] In your head, in your head they are
-#och[D] fightin' \
-#och[Em] With their tanks and their bombs 
-#och[C] and their bombs and their guns \
-#och[G] In your head, in your head they are
-#och[D] cryin'
 
-=== #raw("[Chorus]")
+=== #raw("[[Pre-Chorus]]")
 
-#och[Em] In your head,
-#och[C] in your head  \
-#och[G] Zombie, zombie,
-#och[D] zombie-ie-ie \
-#och[Em] What's in your head,
-#och[C] in your head  \
-#och[G] Zombie, zombie,
-#och[D] zombie-ie-ie, oh
+[Em] But you see, it's not me, it's not [C] my family \
+[G]  In your head, in your head they are [D] fightin' \
+[Em] With their tanks and their bombs [C] and their bombs and their guns \
+[G]  In your head, in your head they are [D] cryin'
 
+=== #raw("[[Chorus]]")
+#change-tonality(2)
+// Raw works too, no manual breaks needed!
+#show raw.where(block: true): set text(font: "Libertinus Serif", size: 1.25em)
+```
+[Em] In your head, [C] in your head
+[G ] Zombie, zombie, [D] zombie-ie-ie
+[Em] What's in your head, [C] in your head
+[G ] Zombie, zombie, [D] zombie-ie-ie, oh
+```
 <…>
+
