@@ -1,31 +1,47 @@
 #import "../tabs/tabs.typ": canvas, draw
 
-#let render-chord(hold, open, muted, fret-number, name,
-  barre: 0, barre-shift: 0, shadow-barre: 0, string-number: 6,
-  scale-length: 1pt, 
-  colors: (:), 
-  number-to-left: false,
-  thick-nut: true) = {
-  /// IMPORTANT: for the convenience there all strings are numbered FROM THE TOP (e.g. A will be 1)
-  /// hold: array of coords of positions held; string first, then shift"
-  /// open: array of numbers of opened strings
-  /// muted: array of numbers for muted
-  /// fret-number: the starting fret
-  /// barre: length of barre if present; ZERO means NO
-  /// barre-shift: shift of the barre; usually no, but there are exceptions
-  /// shadow-barre: length of semi-visible upper part of barre (default 0) 
-  /// string-number: number of strings of the instrument, default is 6
+
+/// 5. Renders the chord
+/// 
+/// _Important_: for the convenience there all strings are numbered _from the top_ (e.g. A will be 1)
+///  
+#let render-chord(
+  /// array of coords of positions held; string first, then shift -> array[(int, int)]
+  hold,
+  /// array of numbers of opened strings -> array[int]
+  open,
+  /// array of numbers for muted -> array[int]
+  muted,
+  /// the starting fret -> int
+  fret-number,
+  /// displayed name -> str
+  name,
+  /// length of barre if present; ZERO means NO -> int
+  barre: 0,
+  /// shift of the barre; usually no, but there are exceptions -> int
+  barre-shift: 0,
+  /// length of semi-visible upper part of barre (default 0) -> int
+  shadow-barre: 0,
+  /// number of strings of the instrument, default is 6 -> int
+  string-number: 6,
+  /// outputs canvas with roughly `height=80 * scale-length` 
+  /// and width=((string-number + 1)*10 + 5) * scale-length -> length
+  scale-length: 1pt,
   /// colors: dictionary with colors for image
   /// - grid: color of grid, default is `gray.darken(20%)`
   /// - open: color of circles for open strings, default is `black`
   /// - muted: color of crosses for muted strings, default is `black`
-  /// - hold: color of held positions, default is #5d6eaf
-  /// - barre: color of main barre part, default is #5d6eaf
-  /// - shadow-barre: color of "unnecessary" barre part, default is #5d6eaf.lighten(30%)
-  /// colors and other properties of fret and chord name you can specify using show rules for text and raw (fret is `raw`) 
-  /// outputs canvas with height=80 * scale-length 
-  /// and width=((string-number + 1)*10 + 5) * scale-length
-  
+  /// - hold: color of held positions, default is `#5d6eaf`
+  /// - barre: color of main barre part, default is `#5d6eaf`
+  /// - shadow-barre: color of "unnecessary" barre part, default is `#5d6eaf`.lighten(30%)
+  /// colors and other properties of fret and chord name you can specify using show rules for text and raw (fret is `raw`)
+  /// -> dictionary
+  colors: (:), 
+  /// whether to display to the left -> boolean
+  number-to-left: false,
+  /// whether to draw thick nut -> boolean
+  thick-nut: true) = {
+
   assert.eq(type(name), str)
   assert.eq(type(hold), array)
   assert.eq(type(open), array)
@@ -125,15 +141,21 @@
   })
 }
 
-#let generate-chord(tabs, name: "", string-number: 6, force-barre: 0, use-shadow-barre: true, scale-length: 1pt, colors: (:), number-to-left: false, thick-nut: true) = {
-  /// generates image with really simple rules
-  /// tab: ARRAY of six elements (not a string);
-  /// "x" (mute) and numbers are accepted
-  /// name: name of chord
-  /// string-number: total number of strings instrument has
-  /// force-barre: 0 → standard algorithm, 1 → force add barre, -1 → force avoid barre
-  /// inside the same fret (default no)
-
+/// 4. Generates chord image with simple rules, for inner use mostly
+#let generate-chord(
+  /// array of parsed tabstring,
+  /// "x" (mute) and numbers are accepted -> array[int｜"x"]
+  tabs,
+  /// displayed name -> str
+  name: "",
+  /// total number of strings instrument has -> int
+  string-number: 6,
+  /// 0 → standard algorithm, 1 → force add barre, -1 → force avoid barre -> int
+  force-barre: 0,
+  /// -> bool
+  use-shadow-barre: true,
+  /// see `new-chordgen` for this and other parameters
+  scale-length: 1pt, colors: (:), number-to-left: false, thick-nut: true) = {
   if string-number == auto {
     string-number = tabs.len()
   }
@@ -205,7 +227,7 @@
   return render-chord(hold, open, muted, fret-number, name, barre: barre, barre-shift: 0, shadow-barre: shadow-barre, string-number: string-number, colors: colors, scale-length: scale-length, number-to-left: number-to-left, thick-nut: thick-nut)
 }
 
-
+/// 3. Parses tabstring
 #let parse-tabstring(string-tab) = {
   let to-int-or-ignore(s) = {
     s = s.trim()
@@ -238,15 +260,39 @@
   return (tabs, force-barre)
 }
 
-
-#let new-chordgen(string-number: 6, use-shadow-barre: true, scale-length: 1pt, colors: (:), number-to-left: false, thick-nut: true) = {
+/// 1. Creates a new `chordgen`: a new function that takes tabstring, name and scale-length and returns a rendered chord block
+#let new-chordgen(
+  /// length of semi-visible upper part of barre (default 0) -> int
+  shadow-barre: 0,
+  /// number of strings of the instrument, default is 6 -> int
+  string-number: 6,
+  /// outputs canvas with roughly `height=80 * scale-length` 
+  /// and width=((string-number + 1)*10 + 5) * scale-length -> length
+  scale-length: 1pt,
+  /// colors: dictionary with colors for image
+  /// - grid: color of grid, default is `gray.darken(20%)`
+  /// - open: color of circles for open strings, default is `black`
+  /// - muted: color of crosses for muted strings, default is `black`
+  /// - hold: color of held positions, default is `#5d6eaf`
+  /// - barre: color of main barre part, default is `#5d6eaf`
+  /// - shadow-barre: color of "unnecessary" barre part, default is `#5d6eaf`.lighten(30%)
+  /// colors and other properties of fret and chord name you can specify using show rules for text and raw (fret is `raw`)
+  /// -> dictionary
+  colors: (:), 
+  /// whether to display to the left -> boolean
+  number-to-left: false,
+  /// whether to draw thick nut -> boolean
+  thick-nut: true,
+  /// Whether to use shadow barre -> bool
+  use-shadow-barre: true,
+  ) = {
   (tabstring, name: " ", scale-l: none) => {
     let (tabs, force-barre) = parse-tabstring(tabstring)
     generate-chord(tabs, name: name, string-number: string-number, force-barre: force-barre, use-shadow-barre: use-shadow-barre, scale-length: if scale-l != none {scale-l} else {scale-length}, colors: colors, number-to-left: number-to-left, thick-nut: thick-nut)
   }
 }
 
-// the width of the chord diagram will be this * scape-length
+// 2. The width of the chord diagram will be roughly this * scape-length
 #let get-chordgram-width-scale(n-strings) = {
   ((n-strings + 1)*10 + 5)
 }

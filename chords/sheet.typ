@@ -2,7 +2,19 @@
 #import "smart-chord.typ": smart-chord, red-missing-fifth
 #import "draw-chord.typ": get-chordgram-width-scale
 
-#let overchord(text, styling: strong, align: start, height: 1em, width: -0.25em) = box(place(align, styling([#text <chord>])), height: 1em + height, width: width)
+/// 1. A simple function to place chord over text. Attaches <chord> tag to the text to apply tonality and make a chordlib. May be replaced with any custom.
+/// -> chord
+#let overchord(
+  /// text to attach. Should be plain string for tagging to work -> str
+  text,
+  /// styling function that is applied to the string -> (text <chord>) => content
+  styling: strong,
+  /// alignment of the word above the point -> alignment
+  align: start,
+  /// height of the chords -> length
+  height: 1em,
+  /// roughly x offset -> length
+  width: -0.25em) = box(place(align, styling([#text <chord>])), height: 1em + height, width: width)
 
 #let _notes = ("A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#")
 #let _chord-root-regex = regex("[A-G][#♯b♭]?")
@@ -13,7 +25,13 @@
   "♭": -1
 )
 
-#let shift-chord-tonality(chord, tonality) = {
+/// 8. Shifts tonality of given chord name by given amount with regexes
+/// -> str
+#let shift-chord-tonality(
+  /// chord name -> str
+  chord,
+  /// number of halftones to move tonality -> int
+  tonality) = {
   let match = chord.match(_chord-root-regex).text
   let base = _notes.position(e => e == match.at(0))
   let delta = if match.len() == 1 {0} else {_pm.at(match.at(1))}
@@ -21,39 +39,68 @@
   chord.replace(_chord-root-regex, _notes.at(new))
 }
 
-/// get tonality by element with location or real location
-#let get-tonality(loc) = {
+/// 7. get current tonality in document
+/// -> int
+#let get-tonality(
+  ///  Element that has location or `location` -> content | location
+  loc
+  ) = {
   if type(loc) != location {
     loc = loc.location()
   }
-  query(selector(<tonality>).before(chord.location())).at(0, default: (value: 0)).value
+  query(selector(<tonality>).before(loc)).at(0, default: (value: 0)).value
 }
 
-#let auto-tonality-chord(name, ..args) = {
+/// 6. Smart chord that changes tonality automatically
+/// -> chord
+#let auto-tonality-chord(
+  /// chord name -> str
+  name,
+  /// smart chord method to use -> function(name, ..args) → chord
+  smart-chord: smart-chord,
+  /// arguments for smart-chord -> any
+  ..args) = {
   context smart-chord(shift-chord-tonality(name, get-tonality(here())), ..args)
 }
 
-#let change-tonality(tonality-shift) = {
+/// 5. Changes current tonality shift to given number
+/// This is just metadata, so you need to put into document to have any effect
+#let change-tonality(
+  /// number of halftones to move tonality -> int
+  tonality-shift) = {
   [#metadata(tonality-shift) <tonality>]
 }
 
-// inspired by soxfox42's chordify
-/// use `#show: chordify` in your document to allow 
-#let chordify(doc, squarechords: true, line-chord: overchord, heading-reset-tonality: none) = {
-  show "[[": if squarechords { "[" } else { "[[" }
-  show "]]": if squarechords { "]" } else { "]]" }
-  let chord-regex = regex("\\[([^\[\]]+?)\\]")
-  show chord-regex: it => if squarechords {
-    line-chord(it.text.match(chord-regex).captures.at(0))
-  } else {
-    it
-  }
+/// 2. Use `#show: chordify` in your document to allow auto square chords formatting and automatic tonality change 
+/// inspired by soxfox42's chordish
+///  
+/// -> content
+#let chordify(
+  /// the document to apply show rule -> content
+  doc,
+  /// enable square brackets chords writing -> boolean
+  squarechords: true,
+  /// function to apply to the chord names -> function(name) → content
+  line-chord: overchord,
+  // heading level to reset tonality at -> int | none
+  heading-reset-tonality: none) = {
   show <chord>: c => if get-tonality(c) == 0 {c} else {shift-chord-tonality(c.text, get-tonality(c))}
 
   if heading-reset-tonality != none {
     show heading(level: heading-reset-tonality): it => it + change-tonality(0)
   }
-  doc
+
+  if squarechords {
+    show "[[": "[" 
+    show "]]": "]"
+
+    let chord-regex = regex("\\[([^\[\]]+?)\\]")
+    show chord-regex: it => line-chord(it.text.match(chord-regex).captures.at(0))
+
+    doc
+  } else {
+    doc
+  }
 }
 
 /// Utility function
@@ -78,10 +125,29 @@
   }
 }
 
-/// Render all chords of current song.
+/// 3. Render all chords of current song.
 /// - Set `header-level` to set headings that separate the different songs.
 ///   If none, all chords in document will be rendered.   
-#let chordlib(chordgen: red-missing-fifth, tuning: default-tuning, exclude: (), switch: (:), at: (:), scale-l: 1pt, heading-level: none) = context {
+#let chordlib(
+  /// smart chord function to use
+  smart-chord: smart-chord,
+  /// chordgen for smart-chord
+  chordgen: red-missing-fifth,
+  /// tuning to use in "A B C D" format -> str
+  tuning: default-tuning,
+  /// chords not to draw, can be added manually 
+  /// in format ("Am", ...) -> array[str]
+  exclude: (),
+  /// versions of chords to use (default zero is the "best")
+  /// in format (Am: 2, ...) -> dictionary[int] 
+  switch: (:),
+  /// at witch fret to find the best chord
+  /// in format (Am: 5, ...) -> dictionary[int|none]
+  at: (:),
+  /// scale length, see `draw-chord` -> length
+  scale-l: 1pt,
+  /// heading level to search chords within -> int
+  heading-level: none) = {
   // select fitting chord
   let chords-selector = inside-level-selector(selector(<chord>), heading-level)
   let rendered = ()
@@ -98,8 +164,19 @@
   }
 }
 
-#let sized-chordlib(N: 2, width: 130pt, ..args) = {
+/// 4. Draw a nice box with chords inside
+#let sized-chordlib(
+  /// number of chords inside a box -> int
+  N: 2,
+  /// width of the box -> length
+  width: 130pt,
+  /// content to add at chords start -> content
+  prefix: none,
+  /// content to add at chords end (e.g., some excluded chords) -> content
+  postfix: none,
+  /// all the other args of `chordlib`
+  ..args) = {
   let scale = get-chordgram-width-scale(args.named().at("tuning", default: default-tuning).split().len())
-  block(stroke: gray + 0.2pt, inset: 1em, width: width + 2em, chordlib(..args, scale-l: width / N / scale))
+  context prefix + block(stroke: gray + 0.2pt, inset: 1em, width: width + 2em, chordlib(..args, scale-l: width / N / scale)) + postfix
 }
 

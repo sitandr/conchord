@@ -1,21 +1,37 @@
 #import "@preview/cetz:0.3.1": canvas, draw
 #import "./gen.typ": gen
 
+/// Creates a new tab line
 #let new(
+  /// the tab code; see README for rough specification -> raw
   tabs,
+  /// what to add at the "start" of tab canvas -> cetz drawing
   preamble: none,
+  /// what to add at the "end" of tab canvas -> cetz drawing
   extra: none,
+  /// scope for your code for custom elements -> dictionary
   eval-scope: (:),
+  /// canvas scale length -> length
   scale-length: 0.3cm,
+  /// number of strings -> int
   s-num: 6,
+  /// length in cetz points of one beat -> float
   one-beat-length: 8,
+  /// spacing between the lines -> float
   line-spacing: 3,
+  /// enable smart scaling for better fitting to line -> boolean
   enable-scale: true,
+  /// colors of things, see README -> dictionary
   colors: (:),
+  /// maximum scaling for smart scale -> float
   autoscale-max: 3.0,
+  /// minimal scaling for smart scale -> float
   autoscale-min: 0.9,
+  /// draw "rhythm" bar
   draw-rhythm: false,
+  /// render this number of notes only -> int | none
   debug-render: none,
+  /// draw numbers of step
   debug-numbers: false,
 ) = {
   let content_type = content
