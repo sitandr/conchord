@@ -5,19 +5,19 @@
 
 What can you do with this package?
 
-+ Write up a song with it's chords you liked into Typst format in quite a pretty and simple way.
++ Write up a song with chords into Typst format in quite a pretty and simple way.
 
-+ Explore all the possible ways to play some chord with your special tuning of your special string instrument (like ukulele, bass guitar, mandolin or anything else).
++ Explore all the possible chord variants with your special tuning of your special string instrument (like ukulele, bass guitar, mandolin or anything else).
 
   > Conchord embeds a [simple music theory engine](https://github.com/sitandr/conchord-gen) through WASM to interpret chord names and dynamically generate all possible chord tablatures. It also uses some simple heuristics to find the best ones. _Sometimes they may be not the most popular ones._
 
   > That means conchord doesn't predefine anything, it can come up with any chords for any tuning and instrument!
 
-+ Use this exploration of ways to play a chord to come up with and write up the best way to play your song (very few services allow that). Of course, you can define your own chords without using the engine.
++ Use this exploration of chord variants to come up with the best way to play your song. Of course, you can also define your own chords without using the engine.
 
-+ Quickly write tabs for your music with compact special tab language. There are still some limitations, but it's possible to write basically anything tab-related with some effort.
++ Quickly write tabs for your music with compact special tab "language". There are some limitations, but it's possible to write basically anything tab-related with some effort.
 
-+ Easily transpose any part of your songs, change the tuning and instrument and get an instant update of your song chord library (the place where the diagrams are displayed).
++ Easily transpose anything in your songs, change the tuning and instrument and get an instant update of your song chord library (the place where the diagrams are displayed).
 
 + Write "a book" of compositions with their individual chord libraries.
 + And many more!
@@ -38,8 +38,7 @@ What can you do with this package?
       1. [Think about frets, not layout](#think-about-frets-not-layout)
       2. [Shadow barre](#shadow-barre)
       3. [Name auto-scaling](#name-auto-scaling)
-      4. [Easier chords for lyrics](#easier-chords-for-lyrics)
-      5. [Customizing text](#customizing-text)
+      4. [Customizing text](#customizing-text)
 5. [Tabs](#tabs)
       1. [Duration](#duration)
       2. [Bars and repetitions](#bars-and-repetitions)
@@ -242,15 +241,6 @@ Some chord generators put barre only where it _ought to_ be (any less will not h
 
 ### Name auto-scaling
 Chord name font size is _reduced_ for _large_ chord names, so the name fits well into chord diagram (see example above). That makes it much more pretty to stack several chords together. To achieve chordx-like behavior, you can always use `#figure(chord("…"), caption: …)`.
-
-### Easier chords for lyrics
-Just add chord labels above lyrics in arbitrary place, don't think about what letter exactly it should be located. By default `overchord` aligns the chord label to the left, so it produces pretty results out-of-box. You can pass other alignments to `align` argument, or use the chords straight inside words.
-
-Feel free to use it for your purposes outside of the package.
-
-It takes on default `-0.25em` width to remove one adjacent space, so
-- To make it work on monospace/other special fonts, you will need to adjust `width` argument. The problem is that I can't `measure` space, but maybe that will be eventually fixed.
-- To add chord inside word, you have to add _one_ space, like `wo #chord[Am]rd`.
 
 ### Customizing text
 

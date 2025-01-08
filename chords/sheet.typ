@@ -3,9 +3,16 @@
 #import "draw-chord.typ": get-chordgram-width-scale
 
 /// 1. A simple function to place chord over text. Attaches <chord> tag to the text to apply tonality and make a chordlib. May be replaced with any custom.
+/// 
+/// Just add chord labels above lyrics in arbitrary place, don't think about what letter exactly it should be located. By default `overchord` aligns the chord label to the left, so it produces pretty results out-of-box. You can pass other alignments to `align` argument, or use the chords straight inside words.
+/// 
+/// Feel free to use it for your purposes outside of the package. \
+/// It takes on default `-0.25em` width to remove one adjacent space, so
+/// - To make it work on monospace/other special fonts, you will need to adjust `width` argument. The problem is that I can't `measure` space, but maybe that will be eventually fixed.
+/// - To add chord inside word, you have to add _one_ space, like `wo #chord[Am]rd`.
 /// -> chord
 #let overchord(
-  /// text to attach. Should be plain string for tagging to work -> str
+  /// chord name to attach. Should be plain string for tagging to work -> str
   text,
   /// styling function that is applied to the string -> (text <chord>) => content
   styling: strong,
@@ -17,6 +24,11 @@
   /// may be set to zero if you don't put
   /// any spaces between chords and words -> length
   width: -0.25em) = box(place(align, styling([#text <chord>])), height: 1em + height, width: width)
+
+#let inlinechord(
+  text,
+  styling: strong
+) = styling[\[#text<chord>\]]
 
 #let _notes = ("A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#")
 #let _chord-root-regex = regex("[A-G][#♯b♭]?")
@@ -50,7 +62,7 @@
   if type(loc) != location {
     loc = loc.location()
   }
-  query(selector(<tonality>).before(loc)).at(0, default: (value: 0)).value
+  query(selector(<tonality>).before(loc)).at(-1, default: (value: 0)).value
 }
 
 /// 6. Smart chord that changes tonality automatically
@@ -64,6 +76,23 @@
   ..args) = {
   context smart-chord(shift-chord-tonality(name, get-tonality(here())), ..args)
 }
+
+#let fulloverchord(
+  /// chord name -> string
+  name,
+  /// styling function that is applied to the string -> (text <chord>) => content
+  styling: strong,
+  /// alignment of the word above the point -> alignment
+  align: start,
+  /// height of the chords -> length
+  height: 40pt,
+  /// width of space in current font,
+  /// may be set to zero if you don't put
+  /// any spaces between chords and words -> length
+  width: -0.25em,
+  smart-chord: smart-chord,
+  scale-length: 0.5pt,
+  ..args) = box(place(align, auto-tonality-chord(name, smart-chord: smart-chord, scale-l: scale-length, ..args)) + place(hide[#name <chord>]), height: 1em + height, width: width)
 
 /// 5. Changes current tonality shift to given number
 /// This is just metadata, so you need to put into document to have any effect
@@ -88,9 +117,10 @@
   heading-reset-tonality: none) = {
   show <chord>: c => if get-tonality(c) == 0 {c} else {shift-chord-tonality(c.text, get-tonality(c))}
 
-  if heading-reset-tonality != none {
-    show heading(level: heading-reset-tonality): it => it + change-tonality(0)
-  }
+  let doc = if heading-reset-tonality != none {
+    show heading.where(level: heading-reset-tonality): it => it + change-tonality(0)
+    doc
+  } else {doc}
 
   if squarechords {
     show "[[": "[" 
