@@ -3,7 +3,7 @@
 
 #box(smart-chord("Am"))
 // what variant number to select
-#box(smart-chord("Am", n: 4))
+#box(smart-chord("Am", n: 2))
 // at what fret to play the chord
 #box(smart-chord("Am", at: 5, n: 1))
 // what tuning to use

@@ -50,6 +50,6 @@
   #change-tonality(1)
   [Dm] Nо dark sarcasm in the сlаssrооm. \
   // every function can be also used directly
-  #fulloverchord("Dm", n: 1) Teacher leave them kids #inlinechord[Dm] аlоnе. \
+  #fulloverchord("Dm", n: 1) Teacher leave them kids #inlinechord[G] аlоnе. \
   [G] Hey, Teacher! Leave them kids аlоnе.
 ]
