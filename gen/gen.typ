@@ -11,7 +11,7 @@
 }
 
 /// Gets all possible chord strings with given tuning (and optionally at given fret)
-/// Complex chord with ommitted perfect fifth will have `?` in end
+/// Complex chord with omitted perfect fifth will have `?` in end
 /// 
 /// ```example
 /// #get-chords("Cmaj7").slice(0, 10)
