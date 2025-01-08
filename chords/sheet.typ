@@ -26,6 +26,7 @@
   width: -0.25em) = box(place(align, styling([#text <chord>])), height: 1em + height, width: width)
 
 /// 1a. A replacement for overchord, displays chords inline in (double) square brackets
+/// -> content
 #let inlinechord(
   text,
   styling: strong
@@ -79,6 +80,7 @@
 }
 
 /// 1b. An overchord alternative, displays a chord above line that is changed with tonality 
+/// -> content
 #let fulloverchord(
   /// chord name -> string
   name,
@@ -98,6 +100,7 @@
 
 /// 5. Changes current tonality shift to given number
 /// This is just metadata, so you need to put into document to have any effect
+/// -> content
 #let change-tonality(
   /// number of halftones to move tonality -> int
   tonality-shift) = {
@@ -139,6 +142,7 @@
 
 /// Utility function
 /// Selects all things inside current "chapter"
+/// -> selector
 #let inside-level-selector(select, heading-level) = {
   if heading-level == none {
     select
@@ -161,7 +165,10 @@
 
 /// 3. Render all chords of current song.
 /// - Set `header-level` to set headings that separate the different songs.
-///   If none, all chords in document will be rendered.   
+///   If none, all chords in document will be rendered.
+/// 
+/// _This must be inside `context` to work_
+/// -> sequence[content]  
 #let chordlib(
   /// smart chord function to use
   smart-chord: smart-chord,
@@ -199,6 +206,7 @@
 }
 
 /// 4. Draw a nice box with chords inside
+/// -> content
 #let sized-chordlib(
   /// number of chords inside a box -> int
   N: 2,

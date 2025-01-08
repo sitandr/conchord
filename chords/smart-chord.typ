@@ -11,6 +11,7 @@
 /// ```example
 /// #red-missing-fifth("012?")
 /// ```
+/// -> chord
 #let red-missing-fifth(tabs, name: "", scale-l: 1pt) = {
   if tabs.at(-1) == "?" {
     _red-auto-chord(tabs.slice(0, -1), name: name, scale-l: scale-l)
@@ -23,6 +24,7 @@
 /// ```example
 /// #smart-chord("Am")
 /// ```
+/// -> chord
 #let smart-chord(
   /// chord name -> str
   name,

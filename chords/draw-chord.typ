@@ -4,7 +4,7 @@
 /// 5. Renders the chord
 /// 
 /// _Important_: for the convenience there all strings are numbered _from the top_ (e.g. A will be 1)
-///  
+/// -> chord
 #let render-chord(
   /// array of coords of positions held; string first, then shift -> array[(int, int)]
   hold,
@@ -142,6 +142,7 @@
 }
 
 /// 4. Generates chord image with simple rules, for inner use mostly
+/// -> chord
 #let generate-chord(
   /// array of parsed tabstring,
   /// "x" (mute) and numbers are accepted -> array[int｜"x"]
@@ -227,7 +228,8 @@
   return render-chord(hold, open, muted, fret-number, name, barre: barre, barre-shift: 0, shadow-barre: shadow-barre, string-number: string-number, colors: colors, scale-length: scale-length, number-to-left: number-to-left, thick-nut: thick-nut)
 }
 
-/// 3. Parses tabstring
+/// 3. Parses tabstring 
+/// -> (array, boolean)
 #let parse-tabstring(string-tab) = {
   let to-int-or-ignore(s) = {
     s = s.trim()
@@ -261,6 +263,7 @@
 }
 
 /// 1. Creates a new `chordgen`: a new function that takes tabstring, name and scale-length and returns a rendered chord block
+/// -> function[(tabs, name, scale-l)→chord]
 #let new-chordgen(
   /// length of semi-visible upper part of barre (default 0) -> int
   shadow-barre: 0,
@@ -292,7 +295,10 @@
   }
 }
 
-// 2. The width of the chord diagram will be roughly this * scape-length
-#let get-chordgram-width-scale(n-strings) = {
+/// 2. The width of the chord diagram will be roughly this \* scape-length
+/// -> float
+#let get-chordgram-width-scale(
+  /// Number of strins in chord -> int 
+  n-strings) = {
   ((n-strings + 1)*10 + 5)
 }

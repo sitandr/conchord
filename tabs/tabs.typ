@@ -2,6 +2,7 @@
 #import "./gen.typ": gen
 
 /// Creates a new tab line
+/// -> content
 #let new(
   /// the tab code; see README for rough specification -> raw
   tabs,

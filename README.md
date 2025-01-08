@@ -200,7 +200,7 @@ See the full code [there](examples/zombie.typ).
 
 `overchord` is not the only chord display method you can use. There are also built-in functions `inlinechord` and `fulloverchord` that display chord names inline and draw full chord diagram above line correspondingly:
 
-```
+```typ
 = Another Brick in the wall, Pink Floyd
 
 #[
@@ -426,10 +426,11 @@ Can be enabled or disabled with `rhythm: true`. It's far from ideal now, but may
 There are lots of possible things to add to this package. With power of WASM engine quite anything is possible.
 
 1. Improve chord complexity evaluation for WASM
-2. Add fingering rendering (contributions welcome!) and generation.
-3. Add piano chords
-4. Add chord detection (generate names from tab strings).
-5. Further development of tabs. Add more built-in things to use, improve language, rendering, rhythm section and so on.
+2. Improve chord names interpretation, add `no` chords, chord variants
+3. Add fingering rendering (contributions welcome!) and generation.
+4. Add piano chords
+5. Add chord detection (generate names from tab strings).
+6. Further development of tabs. Add more built-in things to use, improve language, rendering, rhythm section and so on.
 
 If you are interested in any of this, please create an issue or "vote" with reactions on existing one. That would make me more interested in working on this.
 
