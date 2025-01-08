@@ -25,10 +25,11 @@
   /// any spaces between chords and words -> length
   width: -0.25em) = box(place(align, styling([#text <chord>])), height: 1em + height, width: width)
 
+/// 1a. A replacement for overchord, displays chords inline in (double) square brackets
 #let inlinechord(
   text,
   styling: strong
-) = styling[\[#text<chord>\]]
+) = styling[\[\[#text<chord>\]\]]
 
 #let _notes = ("A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#")
 #let _chord-root-regex = regex("[A-G][#♯b♭]?")
@@ -77,6 +78,7 @@
   context smart-chord(shift-chord-tonality(name, get-tonality(here())), ..args)
 }
 
+/// 1b. An overchord alternative, displays a chord above line that is changed with tonality 
 #let fulloverchord(
   /// chord name -> string
   name,
@@ -206,9 +208,11 @@
   prefix: none,
   /// content to add at chords end (e.g., some excluded chords) -> content
   postfix: none,
+  /// inset for block to use
+  inset: 10pt,
   /// all the other args of `chordlib`
   ..args) = {
   let scale = get-chordgram-width-scale(args.named().at("tuning", default: default-tuning).split().len())
-  context prefix + block(stroke: gray + 0.2pt, inset: 1em, width: width + 2em, chordlib(..args, scale-l: width / N / scale)) + postfix
+  context block(stroke: gray + 0.2pt, inset: inset, width: width + 2em, prefix + chordlib(..args, scale-l: width / N / scale) + postfix)
 }
 

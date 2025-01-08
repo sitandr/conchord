@@ -31,6 +31,7 @@ What can you do with this package?
    2. [Drawing chords](#drawing-chords)
       1. [Chordgens and custom chords](#chordgens-and-custom-chords)
       2. [Song sheets](#song-sheets)
+      3. [Chords styles](#chords-styles)
 3. [Reference](#reference)
    1. [Chord naming reference](#chord-naming-reference)
 4. [Notes about features and decisions](#notes-about-features-and-decisions)
@@ -194,6 +195,56 @@ If you have many songs in one document, set `heading-level` of `chordlib` and `c
 
 See the full code [there](examples/zombie.typ).
 
+
+### Chords styles
+
+`overchord` is not the only chord display method you can use. There are also built-in functions `inlinechord` and `fulloverchord` that display chord names inline and draw full chord diagram above line correspondingly:
+
+```
+= Another Brick in the wall, Pink Floyd
+
+#[
+  #show: chordify.with(heading-reset-tonality: 2)
+
+  // in fact, heading-reset just adds change-tonality(0) there
+  == Default `overchord`
+  [Dm] We dоn't need nо еduсаtiоn, \
+  [Dm] We dоn't need nо thоught соntrоl, \
+  #change-tonality(1)
+  [Dm] Nо dark sarcasm in the сlаssrооm.   \
+  [Dm] Teacher leave them kids [G] аlоnе.   \
+  [G] Hey, Teacher!  Leave them kids аlоnе.
+]
+
+#[
+  #show: chordify.with(line-chord: inlinechord, heading-reset-tonality: 2)
+  == `inlinechord`
+  [Dm] We dоn't need nо еduсаtiоn, \
+  [Dm] We dоn't need nо thоught соntrоl, \
+  #change-tonality(1)
+  [Dm] Nо dark sarcasm in the сlаssrооm. \
+  [Dm] Teacher leave them kids [G] аlоnе. \
+  [G] Hey, Teacher!  Leave them kids аlоnе. \
+]
+
+
+#[
+  #show: chordify.with(line-chord: fulloverchord, heading-reset-tonality: 2)
+  == `fulloverchord`
+  // chordlib still works!
+  #sized-chordlib(width: 150pt, N: 3, prefix: [_Chord library_ #linebreak()])
+
+  [Dm] We dоn't need nо еduсаtiоn, \
+  [Dm] We dоn't need nо thоught соntrоl, \
+  #change-tonality(1)
+  [Dm] Nо dark sarcasm in the сlаssrооm. \
+  // every function can be also used directly
+  #fulloverchord("Dm", n: 1) Teacher leave them kids #inlinechord[Dm] аlоnе. \
+  [G] Hey, Teacher!  Leave them kids аlоnе.
+]
+```
+![](examples/sheet-styles.png)
+
 # Reference
 
 See the full function reference [there](reference/reference.pdf).
@@ -222,7 +273,7 @@ _Sometimes it may be not obvious how to convert your chord name into kord's spec
 
 For example, `Cmaj7-5` or `Cmaj7` converts into `Cmaj7b5` or `Cmaj7(b5)`. The same applies for `+5` to `#5`.
 
-Chords with `no5` or similar are not supported for now. They are not "correct" chords, after all. But if someone requests the support, it will be probably done.
+Chords with `no5` are not supported for now. They are not "correct" chords, after all. But if someone requests the support, it will be probably done.
 
 # Notes about features and decisions
 

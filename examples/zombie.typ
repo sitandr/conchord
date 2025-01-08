@@ -1,5 +1,4 @@
-#import "../lib.typ": new-chordgen, overchord, chordlib, chordify, change-tonality, sized-chordlib, change-tonality
-#let chord = new-chordgen(string-number: auto)
+#import "../lib.typ": overchord, chordlib, chordify, change-tonality, sized-chordlib, change-tonality
 
 // For better png in README, doesn't matter
 #set page(height: auto, margin: (right: 0%))
@@ -20,7 +19,7 @@
     // Make all text in chord graph bold
     show text: strong
     // List of used chords there
-    sized-chordlib(heading-level: 2, width: 130pt, switch: (D: 2), at: (A: 5))
+    sized-chordlib(heading-level: 2, width: 130pt, switch: (D: 7), at: (A: 5))
 })
 
 
