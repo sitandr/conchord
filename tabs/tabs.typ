@@ -31,7 +31,7 @@
   draw-rhythm: false,
   /// render this number of notes only -> int | none
   debug-render: none,
-  /// draw numbers of step
+  /// draw numbers of step -> bool
   debug-numbers: false,
 ) = {
   let content_type = content

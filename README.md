@@ -32,15 +32,14 @@ What can you do with this package?
       1. [Chordgens and custom chords](#chordgens-and-custom-chords)
       2. [Song sheets](#song-sheets)
 3. [Reference](#reference)
-   1. [Chord tabstring generation](#chord-tabstring-generation)
+   1. [Chord naming reference](#chord-naming-reference)
 4. [Notes about features and decisions](#notes-about-features-and-decisions)
    1. [Chord-drawing features](#chord-drawing-features)
       1. [Think about frets, not layout](#think-about-frets-not-layout)
       2. [Shadow barre](#shadow-barre)
       3. [Name auto-scaling](#name-auto-scaling)
       4. [Easier chords for lyrics](#easier-chords-for-lyrics)
-   2. [Colors](#colors)
-      1. [Customizing text](#customizing-text)
+      5. [Customizing text](#customizing-text)
 5. [Tabs](#tabs)
       1. [Duration](#duration)
       2. [Bars and repetitions](#bars-and-repetitions)
@@ -78,6 +77,8 @@ Under the hood, this `smart-chord` uses `get-chord` function with very similar s
 #for c in n-best(get-chords("Am"), n: 5) {
   box(red-missing-fifth(c))
 }
+
+Notice: the further, the worse are the variants. Okay, now let's take only five for C7.
 
 = `C7`
 #for c in n-best(get-chords("C7"), n: 5) {
@@ -196,6 +197,34 @@ See the full code [there](examples/zombie.typ).
 
 # Reference
 
+See the full function reference [there](reference/reference.pdf).
+
+## Chord naming reference
+
+I use [kord](https://github.com/twitchax/kord) as library for WASM library to parse chords and generate notes, so the naming requirements are tied to it's naming rules. In future, we can preprocess the names to match `kord`'s.
+
+For now the chord can consist of:
+
+```
+* The root note (e.g., `C`, `D#`, `Eb`, `F##`, `Gbb`, `A♯`, `B♭`, etc.).
+
+* Any modifiers (e.g., `7`, `9`, `m7b5`, `sus4`, `dim`, `+`, `maj7`, `-maj7`, `m7b5#9`, etc.).
+
+* Any extensions (e.g., `add9`, `add11`, `add13`, `add2`, etc.).
+
+* Zero or one slash notes (e.g., `/E`, `/G#`, `/Fb`, etc.).
+
+* Zero or one inversions (e.g., `^1`, `^2`, `^3`, etc.).
+
+* Zero or one "crunchy" modifiers, which moves "higher notes" into the same octave frame as the root (i.e., `!`).
+```
+
+_Sometimes it may be not obvious how to convert your chord name into kord's specification._
+
+For example, `Cmaj7-5` or `Cmaj7` converts into `Cmaj7b5` or `Cmaj7(b5)`. The same applies for `+5` to `#5`.
+
+Chords with `no5` or similar are not supported for now. They are not "correct" chords, after all. But if someone requests the support, it will be probably done.
+
 # Notes about features and decisions
 
 ## Chord-drawing features
@@ -222,16 +251,6 @@ Feel free to use it for your purposes outside of the package.
 It takes on default `-0.25em` width to remove one adjacent space, so
 - To make it work on monospace/other special fonts, you will need to adjust `width` argument. The problem is that I can't `measure` space, but maybe that will be eventually fixed.
 - To add chord inside word, you have to add _one_ space, like `wo #chord[Am]rd`.
-
-## Colors
-
-Customize the colors of chord elements. `new-chordgen` accepts the `colors` dictionary with following possible fields:
-  - `grid`: color of grid, default is `gray.darken(20%)`
-  - `open`: color of circles for open strings, default is `black`
-  - `muted`: color of crosses for muted strings, default is `black`
-  - `hold`: color of held positions, default is `#5d6eaf`
-  - `barre`: color of main barre part, default is `#5d6eaf`
-  - `shadow-barre`: color of "unnecessary" barre part, default is `#5d6eaf.lighten(30%)`
 
 ### Customizing text
 

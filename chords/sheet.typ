@@ -13,7 +13,9 @@
   align: start,
   /// height of the chords -> length
   height: 1em,
-  /// roughly x offset -> length
+  /// width of space in current font,
+  /// may be set to zero if you don't put
+  /// any spaces between chords and words -> length
   width: -0.25em) = box(place(align, styling([#text <chord>])), height: 1em + height, width: width)
 
 #let _notes = ("A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#")
