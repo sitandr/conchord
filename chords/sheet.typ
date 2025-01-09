@@ -201,7 +201,7 @@
     }
     let n = switch.at(c, default: 0)
     let at = at.at(c, default: none)
-    box(align(center+horizon, smart-chord(c, chordgen: chordgen, n: n, at: at, scale-l: scale-l)), width: get-chordgram-width-scale(tuning.split().len()) * scale-l, height: 80* scale-l)
+    box(align(center+horizon, smart-chord(c, chordgen: chordgen, tuning: tuning, n: n, at: at, scale-l: scale-l)), width: get-chordgram-width-scale(tuning.split().len()) * scale-l, height: 80* scale-l)
   }
 }
 
