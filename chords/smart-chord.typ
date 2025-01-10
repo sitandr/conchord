@@ -32,7 +32,7 @@
   chordgen: red-missing-fifth,
   /// number of chord to select, the "best" is zero -> int
   n: 0,
-  /// tuning string in format "A B C D E"
+  /// tuning string in format "A1 B2 C3 D4"
   tuning: default-tuning,
   /// whether to require the lowest note to be the root note 
   true-bass: true,

@@ -151,7 +151,7 @@
   smart-chord: smart-chord,
   /// chordgen for smart-chord
   chordgen: red-missing-fifth,
-  /// tuning to use in "A B C D" format -> str
+  /// tuning to use in "A1 B2 C3 D4" format -> str
   tuning: default-tuning,
   /// whether to require the lowest note to be the root note 
   true-bass: true,
