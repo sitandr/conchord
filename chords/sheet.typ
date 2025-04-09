@@ -97,7 +97,7 @@
   line-chord: overchord,
   // heading level to reset tonality at -> int | none
   heading-reset-tonality: none) = {
-  show <chord>: c => if get-tonality(c) == 0 {c} else {shift-chord-tonality(c.text, get-tonality(c))}
+  show <chord>: c => if get-tonality(c) == 0 {c} else {shift-chord-tonality(if c.has("text") {c.text} else {c.body.text} , get-tonality(c))}
 
   let doc = if heading-reset-tonality != none {
     show heading.where(level: heading-reset-tonality): it => it + change-tonality(0)
