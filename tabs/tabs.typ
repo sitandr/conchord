@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.1": canvas, draw
+#import "@preview/cetz:0.4.1": canvas, draw
 #import "./gen.typ": gen
 
 /// Creates a new tab line
