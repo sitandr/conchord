@@ -23,7 +23,7 @@
   /// width of space in current font,
   /// may be set to zero if you don't put
   /// any spaces between chords and words -> length
-  width: -0.25em) = box(place(align, box(styling([#text <chord>]), width: float("inf")*1pt)), height: 1em + height, width: width)
+  width: -0.25em) = box(place(align, box(styling([#text <chord>]), width: float("inf")*1pt)), height: 1em + height, width: width) + sym.zwj
 
 /// 1a. A replacement for overchord, displays chords inline in (double) square brackets
 /// -> content
@@ -93,13 +93,24 @@
    smart-chord(shift-chord-tonality(name, get-tonality(here()), sharp-only: sharp-only), ..args)
 }
 
+#let fancy-styling-plain(chord) = {
+  show regex("\d"): super
+  chord.replace("#", "♯")
+    .replace("b", "♭")
+}
+
+#let fancy-styling-autotonality(chord) = {
+  auto-tonality-chord(if "children" in chord.fields() {chord.children.map(c => if "text" in c.fields() {c.text}).join()} else {chord.text},
+  smart-chord: fancy-styling-plain)
+
+  box(place(hide[chord]))
+}
+
 /// 1b. An overchord alternative, displays a chord above line that is changed with tonality 
 /// -> content
 #let fulloverchord(
   /// chord name -> string
   name,
-  /// styling function that is applied to the string -> (text <chord>) => content
-  styling: strong,
   /// alignment of the word above the point -> alignment
   align: start,
   /// height of the chords -> length

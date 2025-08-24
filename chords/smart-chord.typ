@@ -38,9 +38,17 @@
   true-bass: true,
   /// at which fret to search chord
   at: none,
+  // if specified, applies given function to chord name
+  styling: none,
   /// see `draw-chord` for reference
   scale-l: 1pt) = {
-  chordgen(get-chord(name, n: n, tuning: tuning, at: at), name: name, scale-l: scale-l)
+  let chord = chordgen(get-chord(name, n: n, tuning: tuning, at: at), name: name, scale-l: scale-l)
+  if styling == none {
+    chord
+  } else {
+    show regex("[A-H].*"): it => styling(it.text)
+    chord
+  }
 }
 
 #let _notes_sharp = ("A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#")
