@@ -29,8 +29,43 @@
 /// -> content
 #let inlinechord(
   text,
+  /// styling function that is applied to the string -> (text <chord>) => content
   styling: strong
 ) = styling[\[\[#text<chord>\]\]]
+
+/// 1b. A replacement for overchord that "smartly" spreads chords along the words, but requires more writing:
+/// ```example
+/// #let cc = centered-chords 
+/// #cc[A][Why] do #cc[B][birds] #cc[C][D][suddenly] 
+/// #cc[E\#/D][appear]
+/// #cc[E\#/D][?]
+/// ```
+/// -> content
+#let centered-chords(
+  /// styling function that is applied to the string -> (text <chord>) => content
+  styling: strong,
+  /// spacing between rendered chord and word -> spacing
+  gutter: 0.5em,
+  /// placement of chords relative to words -> alignment
+  align: center,
+  /// where to align chords if the chord(s) is larger than word,
+  /// by default the same alignment as `align` -> alignment | auto
+  wrapping-align: auto, 
+  /// the chords and the word to put them on
+  ..args) = context {
+  let chords = if align == left {} else {(h(0.5fr), )}  + args.pos().slice(0, -1).map(c => {
+    // in case it is parsed as a sequence, we should join it back into a text
+    if "children" in c.fields() {
+      c = c.children.map(c => c.text).join()
+    }
+    styling([#c <chord>])
+  }
+    ) + if align == right {} else {(h(0.5fr), )} 
+  let word = args.pos().last()
+  let width_word = measure(word).width
+  let width_chords = measure(chords.join()).width
+  box(width: calc.max(width_word, width_chords), grid(align: if wrapping-align == auto {align.inv()} else {wrapping-align.inv()}, row-gutter: gutter, chords.intersperse(h(1fr)).join(), word))
+}
 
 /// 7. get current tonality in document
 /// -> int
@@ -45,17 +80,17 @@
 }
 
 /// 6. Smart chord that changes tonality automatically
-/// -> chord
+/// -> context
 #let auto-tonality-chord(
   /// chord name -> str
   name,
-  /// smart chord method to use -> function(name, ..args) → chord
+  /// chord displaying method to use -> function(name, ..args) → content
   smart-chord: smart-chord,
   /// if true, converts all note notation to sharp versions
   sharp-only: false,
   /// arguments for smart-chord -> any
-  ..args) = {
-  context smart-chord(shift-chord-tonality(name, get-tonality(here()), sharp-only: sharp-only), ..args)
+  ..args) = context {
+   smart-chord(shift-chord-tonality(name, get-tonality(here()), sharp-only: sharp-only), ..args)
 }
 
 /// 1b. An overchord alternative, displays a chord above line that is changed with tonality 
