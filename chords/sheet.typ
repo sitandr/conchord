@@ -51,9 +51,11 @@
   name,
   /// smart chord method to use -> function(name, ..args) → chord
   smart-chord: smart-chord,
+  /// if true, converts all note notation to sharp versions
+  sharp-only: false,
   /// arguments for smart-chord -> any
   ..args) = {
-  context smart-chord(shift-chord-tonality(name, get-tonality(here())), ..args)
+  context smart-chord(shift-chord-tonality(name, get-tonality(here()), sharp-only: sharp-only), ..args)
 }
 
 /// 1b. An overchord alternative, displays a chord above line that is changed with tonality 
@@ -96,8 +98,12 @@
   /// function applying to the chord names when square brackets are used -> function(name) → content
   line-chord: overchord,
   // heading level to reset tonality at -> int | none
-  heading-reset-tonality: none) = {
-  show <chord>: c => if get-tonality(c) == 0 {c} else {shift-chord-tonality(c.text, get-tonality(c))}
+  heading-reset-tonality: none,
+  /// if true, converts all note notation to sharp versions
+  /// if false, reuses notation for scaling  
+  sharp-only: false,
+  ) = {
+  show <chord>: c => if get-tonality(c) == 0 {c} else {shift-chord-tonality(c.text, get-tonality(c), sharp-only: sharp-only)}
 
   let doc = if heading-reset-tonality != none {
     show heading.where(level: heading-reset-tonality): it => it + change-tonality(0)
@@ -167,13 +173,17 @@
   /// scale length, see `draw-chord` -> length
   scale-l: 1pt,
   /// heading level to search chords within -> int
-  heading-level: none) = {
+  heading-level: none,
+  /// if true, converts all note notation to sharp versions
+  /// if false, reuses notation for scaling 
+  /// and if both notations are present, uses first one
+  sharp-only: false,) = {
   // select fitting chord
   let chords-selector = inside-level-selector(selector(<chord>), heading-level)
   let rendered = ()
   for (i, c) in query(chords-selector)
-      .map(c => shift-chord-tonality(c.text.trim(), get-tonality(c)))
-      .dedup()
+      .map(c => shift-chord-tonality(c.text.trim(), get-tonality(c), sharp-only: sharp-only))
+      .dedup(key: t => shift-chord-tonality(t, 0, sharp-only: true))
       .enumerate() {
     if c in exclude {
       continue

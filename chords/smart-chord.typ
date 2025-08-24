@@ -43,7 +43,9 @@
   chordgen(get-chord(name, n: n, tuning: tuning, at: at), name: name, scale-l: scale-l)
 }
 
-#let _notes = ("A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#")
+#let _notes_sharp = ("A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#")
+#let _notes_flat = ("A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab")
+
 #let _chord-root-regex = regex("[A-G][#♯b♭]?")
 #let _pm = (
   "#": 1,
@@ -58,7 +60,9 @@
   /// chord name -> str
   chord,
   /// number of halftones to move tonality -> int
-  tonality) = {
+  tonality,
+  /// if true, converts all note notation to sharp versions
+  sharp-only: false) = {
   if chord.match(_chord-root-regex) == none {
     panic("Not a chord", chord)
   }
@@ -66,10 +70,20 @@
   chord.replace(_chord-root-regex, 
     match => {
       let match = match.text
-      let base = _notes.position(e => e == match.at(0))
-      let delta = if match.len() == 1 {0} else {_pm.at(match.at(1))}
+      
+      let base = _notes_sharp.position(e => e == match.at(0))
+      let notes_type = _notes_sharp
+      let delta = if match.len() == 1 {0} else {
+        // if it's flat, let's save the user's choice
+        let delta = _pm.at(match.at(1))
+        if not sharp-only and delta < 0 {
+          notes_type = _notes_flat
+        }
+        delta
+      }
       let new = calc.rem(base + delta + tonality, 12)
-      _notes.at(new)
+    
+      notes_type.at(new)
     }
   )
 }
