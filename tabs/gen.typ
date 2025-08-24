@@ -47,7 +47,7 @@
 }
 
 #let gen(s, s-num: 6) = {
-  if type(s) == "content" {
+  if type(s) == content {
     s = s.text
   }
 

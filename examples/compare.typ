@@ -1,4 +1,4 @@
-#import "@preview/chordx:0.5.0": *
+#import "@preview/chordx:0.6.0": *
 #import "../lib.typ": new-chordgen, overchord
 
 #set page(height: auto, margin: 1em)

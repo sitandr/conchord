@@ -348,7 +348,7 @@
               if type(n) == array and n.at(0) == "##" {
                 assert(n.at(2) != none, message: "Empty content")
                 let result = eval(n.at(2), scope: eval-scope)
-                assert(type(result) == content_type or type(result) == str, message: "Eval result should be content or str, found " + type(result) + ": " + n.at(2))
+                assert(type(result) == content_type or type(result) == str, message: "Eval result should be content or str, found " + str(type(result)) + ": " + n.at(2))
                 queque.push({
                   content(
                     (x, -y + 1),
