@@ -7,7 +7,8 @@
         hold: red,
         barre: purple,),
     number-to-left: true,
-    thick-nut: false
+    thick-nut: false,
+    shown-frets-number: 4
 )
 
 #set text(fill: purple)

@@ -24,6 +24,8 @@
   shadow-barre: 0,
   /// number of strings of the instrument, default is 6 -> int
   string-number: 6,
+  /// number of total drawn frets (the height of the diagram)
+  shown-frets-number: 5,
   /// outputs canvas with roughly `height=80 * scale-length` 
   /// and width=((string-number + 1)*10 + 5) * scale-length -> length
   scale-length: 1pt,
@@ -65,12 +67,12 @@
 
     stroke(colors.at("open", default: black) + 1*scale-length)
 
-    for n in open{ // Draw open strings
+    for n in open { // Draw open strings
       circle((5 + n*10, -5), radius: 3.5)
     }
 
     stroke(colors.at("grid", default: gray.darken(20%)) + scale-length)
-    grid((5, -63), (string-number*10 - 5, -13), step: 10, name: "grid")
+    grid((5, -13 - shown-frets-number * 10), (string-number*10 - 5, -13), step: 10, name: "grid")
 
     if fret-number == 0 and thick-nut {
       fill(colors.at("grid", default: gray.darken(20%)))
@@ -79,7 +81,7 @@
     }
 
     for p in hold {
-      assert(p.at(1) < 6, message: "Unable to render chord. Held position (" + repr(p) + ") is too far away.")
+      assert(p.at(1) <= shown-frets-number, message: "Unable to render chord. Held position (" + repr(p) + ") is too far away.")
       circle((p.at(0)*10 + 5, -8 - p.at(1) * 10), radius: 3, fill: colors.at("hold", default: default-blue), stroke: none)
     }
 
@@ -153,6 +155,8 @@
   force-barre: 0,
   /// -> bool
   use-shadow-barre: true,
+  /// number of total drawn frets (the height of the diagram)
+  shown-frets-number: 5,
   /// see `new-chordgen` for this and other parameters
   scale-length: 1pt, colors: (:), number-to-left: false, thick-nut: true) = {
   if string-number == auto {
@@ -223,7 +227,7 @@
     fret-number = min-fret;
   }
 
-  return render-chord(hold, open, muted, fret-number, name, barre: barre, barre-shift: 0, shadow-barre: shadow-barre, string-number: string-number, colors: colors, scale-length: scale-length, number-to-left: number-to-left, thick-nut: thick-nut)
+  return render-chord(hold, open, muted, fret-number, name, barre: barre, barre-shift: 0, shadow-barre: shadow-barre, string-number: string-number, colors: colors, scale-length: scale-length, number-to-left: number-to-left, thick-nut: thick-nut, shown-frets-number: shown-frets-number)
 }
 
 /// 3. Parses tabstring 
@@ -288,10 +292,12 @@
   thick-nut: true,
   /// Whether to use shadow barre -> bool
   use-shadow-barre: true,
+  /// number of total drawn frets (the height of the diagram)
+  shown-frets-number: 5,
   ) = {
   (tabstring, name: " ", scale-l: none) => {
     let (tabs, force-barre) = parse-tabstring(tabstring)
-    generate-chord(tabs, name: name, string-number: string-number, force-barre: force-barre, use-shadow-barre: use-shadow-barre, scale-length: if scale-l != none {scale-l} else {scale-length}, colors: colors, number-to-left: number-to-left, thick-nut: thick-nut)
+    generate-chord(tabs, name: name, string-number: string-number, force-barre: force-barre, use-shadow-barre: use-shadow-barre, scale-length: if scale-l != none {scale-l} else {scale-length}, colors: colors, number-to-left: number-to-left, thick-nut: thick-nut, shown-frets-number: shown-frets-number)
   }
 }
 
