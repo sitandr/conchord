@@ -183,7 +183,7 @@ Here is the document you can easily get with these commands:
 
 > Complete code of the example [see there](examples/zombie.typ)
 
-Let's start with something simple. `Conchord` provides a very simple `overchord` method that displays a given chord above the text (and attaches `<chord>` label for other methods), so you can just write:
+Let's start with something simple. `Conchord` provides a very simple `overchord` method that displays a given chord above the text (and attaches `<chord>` label for other methods, like tonality changing), so you can just write:
 
 ```typst
 #let och(it) = overchord
@@ -273,6 +273,8 @@ See the full code [there](examples/zombie.typ).
 ]
 ```
 ![](examples/sheet-styles.png)
+
+_Note:_ if you want to change the "body" of `overchord` or `inlinechord`, you should use pass the function that would style the chord name to `styling` field. For example, the default styling of `overchord` is `bold`. Otherwise you could get an error or incorrect behavior when the tonality is changed.
 
 # Reference
 
