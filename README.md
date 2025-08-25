@@ -33,7 +33,10 @@ What can you do with this package?
    2. [Drawing chords](#drawing-chords)
       1. [Chordgens and custom chords](#chordgens-and-custom-chords)
       2. [Song sheets](#song-sheets)
-      3. [Chords styles](#chords-styles)
+      3. [Chord library](#chord-library)
+      4. [Centered chords](#centered-chords)
+      5. [Chords styles](#chords-styles)
+      6. [Styling functions](#styling-functions)
 3. [Reference](#reference)
    1. [Chord naming reference](#chord-naming-reference)
 4. [Notes about features and decisions](#notes-about-features-and-decisions)
@@ -190,7 +193,7 @@ Let's start with something simple. `Conchord` provides a very simple `overchord`
 ```typst
 #let och(it) = overchord
 
-#och[Em] Another head 
+#och[Em] Another head
 #och[C] hangs lowly \
 #och[G] Child is slowly
 #och[D] taken
@@ -207,6 +210,8 @@ However, it's not very convenient. That could be replaced with special `show rul
 [Em] And the violence [C] caused such silence \
 [G]  Who are we [D] mistaken?
 ```
+
+### Chord library
 
 To create a chord library widget, use `chordlib` or `sized-chordlib` in a place you want. `chordlib` just gives you a sequence of chord images, while `sized-chord` packs them into pretty box and scales them to match the specified number in row. So we can put this box somewhere to left at song start with `place`:
 
@@ -226,10 +231,45 @@ If you have many songs in one document, set `heading-level` of `chordlib` and `c
 
 See the full code [there](examples/zombie.typ).
 
+### Centered chords
+
+Unfortunately, `overchord` is not very good at properly positioning the chords. It is just a method places a chord where you put it (it has an `align` property, but it corresponds to the chord position relative to the placement point).
+
+If you need a more nice-looking song sheet, there is an `aligned-chords` method that can nicely align and wrap chords relative to words. See for yourself:
+
+```typ
+#import "...": aligned-chords as ac
+
+#let bl = block.with(stroke: gray, inset: 1em)
+
+Center-aligned (default):\
+#bl[
+  #ac[A][Why] do #ac[B][birds] #ac[C][D][suddenly] #ac[E\#/D][appear]\
+  #ac[A][D\#9][Center-aligned chords]
+]
+
+Left-aligned:
+#bl[
+  #ac(align: left)[A][Left-aligned chord] \
+  // cases like this could be set up separately with wrapping-align
+  #ac(align: left)[Asus2(b5)][Same]
+]
+
+Right-aligned:
+#bl[
+  #ac(align: right)[A][Right-aligned chord] \
+  // cases like this could be set up separately with wrapping-align
+  #ac(align: right)[Asus2(b5)][Same]
+]
+```
+
+![Algined chords](examples/aligned-chords.png)
+
+Note that it requires to wrap the block you want to align to in square brackets. Unfortunately, there is no clean and nice way to do it in Typst automatically (for now).
 
 ### Chords styles
 
-`overchord` is not the only chord display method you can use. There are also built-in functions `inlinechord` and `fulloverchord` that display chord names inline and draw full chord diagram above line correspondingly:
+`overchord` and `aligned-chords` are not the only chord display methods you can use. There are also built-in functions `inlinechord` and `fulloverchord` that can display chord names inline or draw full chord diagram above line:
 
 ```typ
 = Another Brick in the wall, Pink Floyd
@@ -276,7 +316,50 @@ See the full code [there](examples/zombie.typ).
 ```
 ![](examples/sheet-styles.png)
 
-_Note:_ if you want to change the "body" of `overchord` or `inlinechord`, you should use pass the function that would style the chord name to `styling` field. For example, the default styling of `overchord` is `bold`. Otherwise you could get an error or incorrect behavior when the tonality is changed.
+### Styling functions
+
+if you want to change the "body" of `overchord` or `inlinechord`, you should use pass the function that would style the chord name to `styling` field. For example, the default styling of `overchord` is `bold`. Otherwise you could get an error or incorrect behavior when the tonality is changed.
+
+The package provides a simple "fancy style" function that uses `♯♭` and puts numbers on top. Here is how styles can be used:
+
+```typ
+#[
+  // to make tonality change automatically
+  #show: chordify
+
+  #overchord[A\#9] Lyrics #overchord(styling: emph)[A\#9] Lyrics
+  #overchord(styling: fancy-styling-autotonality)[A\#9] Lyrics
+
+  `| tonality change |`
+
+  #change-tonality(1)
+
+  #overchord[A\#9] Lyrics #overchord(styling: emph)[A\#9] Lyrics
+  // of course, if you want to use certain a lot, use an alias: 
+  #let fo = overchord.with(styling: fancy-styling-autotonality)
+  #fo[A\#9] Lyrics
+
+  #sized-chordlib(
+    smart-chord: smart-chord.with(styling: it => strong(fancy-styling-plain(it)))
+  )
+]
+
+#[
+  // or it can be used even in chordify
+  // and stylings can be composed
+  #show: chordify.with(line-chord: inlinechord.with(styling: it => strong(fancy-styling-autotonality(it))))
+
+  [A#9] Lyrics
+]
+```
+
+![How styling looks](examples/styling.png)
+
+You may have noticed there are two methods: `fancy-styling-plain` and `fancy-styling-autotonality`. The issue comes from the need to transform the chords _name_, not just the text style. The first just converts string and the second cares about proper `<chord>` tags for chord libraries and automatically changing tonality. 
+
+Thus, `fancy-styling-plain` should be used when drawing chord diagrams (tonality is already applied when drawing) and `fancy-styling-autotonality` should be used in song sheets.
+
+Actually, the code of these functions is very simple, so if you need some special name formatting method you can use their code as base.
 
 # Reference
 

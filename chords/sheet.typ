@@ -45,17 +45,17 @@
   text,
   /// styling function that is applied to the string -> (text <chord>) => content
   styling: strong
-) = "[[" + styling[#text <chord>] + "]]"
+) = "[[" + styling[#text<chord>] + "]]"
 
 /// 1b. A replacement for overchord that "smartly" spreads chords along the words, but requires more writing:
 /// ```example
-/// #let cc = centered-chords 
-/// #cc[A][Why] do #cc[B][birds] #cc[C][D][suddenly] 
-/// #cc[E\#/D][appear]
-/// #cc[E\#/D][?]
+/// #let ac = aligned-chords 
+/// #ac[A][Why] do #ac[B][birds] #ac[C][D][suddenly] 
+/// #ac[E\#/D][appear]
+/// #ac[E\#/D][?]
 /// ```
 /// -> content
-#let centered-chords(
+#let aligned-chords(
   /// styling function that is applied to the string -> (text <chord>) => content
   styling: strong,
   /// spacing between rendered chord and word -> spacing
@@ -115,7 +115,7 @@
 
 #let fancy-styling-autotonality(chord) = {
   auto-tonality-chord(get-text(chord), smart-chord: fancy-styling-plain)
-  box(place(hide[#chord <chord>]))
+  box(place(hide(chord)))
 }
 
 /// 1b. An overchord alternative, displays a chord above line that is changed with tonality 

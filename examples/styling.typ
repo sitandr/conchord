@@ -12,6 +12,7 @@
 #set page(width: auto, height: auto, margin: 1em)
 
 #[
+  // to make tonality change automatically
   #show: chordify
 
   #overchord[A\#9] Lyrics #overchord(styling: emph)[A\#9] Lyrics
