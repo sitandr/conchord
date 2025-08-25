@@ -221,8 +221,8 @@ To create a chord library widget, use `chordlib` or `sized-chordlib` in a place 
     // Make all text in chord graph bold
     show text: strong
     // List of used chords there
-    sized-chordlib(heading-level: 2, width: 100pt,
-      switch: (D: 2), at: (A: 5)) // can specify what exact chord versions we want there
+    sized-chordlib(heading-level: 2, width: 130pt,
+     switch: (D: 3, A: 2), at: (A: 5)) // can specify what exact chord versions we want there
 })
 
 ```

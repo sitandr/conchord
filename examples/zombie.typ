@@ -19,7 +19,7 @@
     // Make all text in chord graph bold
     show text: strong
     // List of used chords there
-    sized-chordlib(heading-level: 2, width: 130pt, switch: (D: 7), at: (A: 5))
+    sized-chordlib(heading-level: 2, width: 130pt, switch: (D: 3, A: 2), at: (A: 5))
 })
 
 
