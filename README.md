@@ -54,6 +54,7 @@ What can you do with this package?
       1. [Custom content](#custom-content)
    2. [Rhythm section](#rhythm-section)
 6. [Plans](#plans)
+7. [Changelog](#changelog)
 
 <!-- tocstop -->
 
@@ -263,7 +264,7 @@ Right-aligned:
 ]
 ```
 
-![Algined chords](examples/aligned-chords.png)
+![Aligned chords](examples/aligned-chords.png)
 
 Note that it requires to wrap the block you want to align to in square brackets. Unfortunately, there is no clean and nice way to do it in Typst automatically (for now).
 
@@ -551,3 +552,31 @@ There are lots of possible things to add to this package. With power of WASM eng
 If you are interested in any of this, please create an issue or "vote" with reactions on existing one. That would make me more interested in working on this.
 
 In general, I will be very glad to receive _any feedback_, both issues and PR-s are very welcome! Though I can't promise I will be able to work on it immediately, it can take me a few weeks to react.
+
+# Changelog
+
+(a very brief one)
+
+- 0.4.0:
+  - Improvements to WASM backend: -5 chords support, better evaluation, fixed crash #13
+  - Added aligned chords song sheet layout function, as an alternative to overchord
+  - Improve styling possibilies
+  - Added "fancy" styling
+  - Made number of frets on image changeble
+  - Added option to finding chords without missing fifth
+  - Reference improvements
+- 0.3.0:
+  - Added WASM backend
+  - New song sheet functionality. Automatically change tonality of any part of song and use short notations of chords in song with special show rule. Use different display functions for line chords. Create a dynamically updated "chord library" that respects tonality shift.
+  - Chord drawing: optional thick nuts (thanks to @soxfox42!).
+  - Tab improvements: simple rhythm bar, repetition macro, ghostnotes (thanks to @KMIJPH!).
+  - Rewritten README and new Reference with tidy. Lots of documentation improvements in general.
+- 0.2.0:
+  - Much better layout of bars for tablatures. Now they scale to available space, autobreaks will  break on barlines if possible.
+  - Added bends (with labels and returns) and vibratos.
+  - Better style customization for tabs, option to draw frets on left for chord diagrams.
+  - Latest cetz version, using layers for drawing (better tablature images)
+  - Added anchors for custom content in tabs
+  - Typos fixes
+- 0.1.1: Basic tabs
+- 0.1.0: Basic drawings and chord placement functions
