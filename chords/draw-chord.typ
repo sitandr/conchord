@@ -292,7 +292,7 @@
   thick-nut: true,
   /// Whether to use shadow barre -> bool
   use-shadow-barre: true,
-  /// number of total drawn frets (the height of the diagram)
+  /// number of total drawn frets (the height of the diagram) -> int
   shown-frets-number: 5,
   ) = {
   (tabstring, name: " ", scale-l: none) => {

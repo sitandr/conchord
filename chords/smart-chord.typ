@@ -32,15 +32,15 @@
   chordgen: red-missing-fifth,
   /// number of chord to select, the "best" is zero -> int
   n: 0,
-  /// tuning string in format "A1 B2 C3 D4"
+  /// tuning string in format "A1 B2 C3 D4" -> string
   tuning: default-tuning,
-  /// whether to require the lowest note to be the root note 
+  /// whether to require the lowest note to be the root note -> bool 
   true-bass: true,
-  /// at which fret to search chord
+  /// at which fret to search chord -> int | none
   at: none,
-  // if specified, applies given function to chord name
+  /// if specified, applies given function to chord name -> function | none
   styling: none,
-  /// see `draw-chord` for reference
+  /// see `draw-chord` for reference -> length
   scale-l: 1pt) = {
   let chord = chordgen(get-chord(name, n: n, tuning: tuning, at: at), name: name, scale-l: scale-l)
   if styling == none {
