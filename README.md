@@ -1,4 +1,4 @@
-# Conchord
+## Conchord
 > Notice: I'm preparing the update, so the documentation there is referring to the new version.
 
 `conchord` (concise chord) is a [Typst](https://github.com/typst/typst) package for string instruments.
@@ -22,7 +22,7 @@ What can you do with this package?
 + Write "a book" of compositions with their individual chord libraries.
 + And many more!
 
-# Overview
+## Overview
 
 <!-- toc -->
 1. [Conchord](#conchord)
@@ -58,7 +58,7 @@ What can you do with this package?
 
 <!-- tocstop -->
 
-## Chord generation
+### Chord generation
 
 It's quite simple to use, see yourself[*](## "Boxing is required to put them in one line. By default the chords are blocks"):
 
@@ -75,7 +75,7 @@ It's quite simple to use, see yourself[*](## "Boxing is required to put them in 
 ```
 ![](examples/simple-gen.png)
 
-### Under the hood
+#### Under the hood
 
 Under the hood, this `smart-chord` uses `get-chord` function with very similar syntax. This function returns chord tabstring like `x03320`, and then it gets rendered with some [`chordgen`](## "A function that renders the chord by it's tabstring, displayed name and scale size").
 
@@ -104,7 +104,7 @@ You may have noticed that some chords are _red_. This means it's not "true" chor
 `smart-chord` uses this `red-missing-fifth` as default `chordgen` too, so don't panic if you got red chord. You can use your own `chordgen` with specifying `smart-chord(chordgen: ...)`.
 
 
-### Ukulele (and many other tunings) moment
+#### Ukulele (and many other tunings) moment
 
 There is another "music theory" important note. By default generator requires the lowest note (bass) in your chord to be the "root" note. This is very common for guitar, but may give quite unpleasant chords for ukulele and similar instruments. That's why there is an option to disable it:
 
@@ -124,9 +124,9 @@ There is another "music theory" important note. By default generator requires th
 ```
 ![](examples/true-bass.png)
 
-## Drawing chords
+### Drawing chords
 
-### Chordgens and custom chords
+#### Chordgens and custom chords
 
 `conchord` works with very simple tab chord representation. That means for custom chords you don't need to think about layout and pass all parameters of drawing barres. `Conchord` will do this for you. Just pass a string with held frets and it will work:
 
@@ -179,7 +179,7 @@ Brief comparison to chordx may be seen there, some concepts explained below:
 
 ![](examples/compare.png)
 
-### Song sheets
+#### Song sheets
 
 For songs with lyrics, `conchord` provides a bunch of methods for convenient formatting. For the full list and description see the documentation section.
 
@@ -212,7 +212,7 @@ However, it's not very convenient. That could be replaced with special `show rul
 [G]  Who are we [D] mistaken?
 ```
 
-### Chord library
+#### Chord library
 
 To create a chord library widget, use `chordlib` or `sized-chordlib` in a place you want. `chordlib` just gives you a sequence of chord images, while `sized-chord` packs them into pretty box and scales them to match the specified number in row. So we can put this box somewhere to left at song start with `place`:
 
@@ -232,7 +232,7 @@ If you have many songs in one document, set `heading-level` of `chordlib` and `c
 
 See the full code [there](examples/zombie.typ).
 
-### Centered chords
+#### Centered chords
 
 Unfortunately, `overchord` is not very good at properly positioning the chords. It is just a method places a chord where you put it (it has an `align` property, but it corresponds to the chord position relative to the placement point).
 
@@ -268,7 +268,7 @@ Right-aligned:
 
 Note that it requires to wrap the block you want to align to in square brackets. Unfortunately, there is no clean and nice way to do it in Typst automatically (for now).
 
-### Chords styles
+#### Chords styles
 
 `overchord` and `aligned-chords` are not the only chord display methods you can use. There are also built-in functions `inlinechord` and `fulloverchord` that can display chord names inline or draw full chord diagram above line:
 
@@ -317,7 +317,7 @@ Note that it requires to wrap the block you want to align to in square brackets.
 ```
 ![](examples/sheet-styles.png)
 
-### Styling functions
+#### Styling functions
 
 if you want to change the "body" of `overchord` or `inlinechord`, you should use pass the function that would style the chord name to `styling` field. For example, the default styling of `overchord` is `bold`. Otherwise you could get an error or incorrect behavior when the tonality is changed.
 
@@ -362,11 +362,11 @@ Thus, `fancy-styling-plain` should be used when drawing chord diagrams (tonality
 
 Actually, the code of these functions is very simple, so if you need some special name formatting method you can use their code as base.
 
-# Reference
+## Reference
 
 See the full function reference [there](reference/reference.pdf).
 
-## Chord naming reference
+### Chord naming reference
 
 I use [kord](https://github.com/twitchax/kord) as library for WASM library to parse chords and generate notes, so the naming requirements are tied to it's naming rules. In future, we can preprocess the names to match `kord`'s.
 
@@ -392,31 +392,31 @@ For example, `Cmaj7-5` or `Cmaj7` converts into `Cmaj7b5` or `Cmaj7(b5)`. The sa
 
 Chords with `no5` are not supported for now. They are not "correct" chords, after all. But if someone requests the support, it will be probably done.
 
-# Notes about features and decisions
+## Notes about features and decisions
 
-## Chord-drawing features
-### Think about frets, not layout
+### Chord-drawing features
+#### Think about frets, not layout
 Write frets for chord as you hold it, like a string "123456" (see examples above). You don't need to think about layouting and subtracting frets, `conchord` does it for you.
 
 > NOTE: I can't guarantee that will be the best chord layout. Moreover, the logic is quite simple: e.g., barre can't be multiple and can't be put anywhere except first bar in the image. However, surprisingly, it works well in almost all of the common cases. The exceptions are really rare.
 
 If you need to create something too _custom/complex_ ~~(but not _concise_)~~, maybe it is worth to try [chordx](https://github.com/ljgago/typst-chords). You can also try using core function `render-chord` for more manual control, but it is still limited by one barre starting from one (but that barre may be shifted). If you think that feature should be supported, you can create an issue.
 
-### Shadow barre
+#### Shadow barre
 
 Some chord generators put barre only where it _ought to_ be (any less will not hold some strings). Others put it where it can be (sometimes maximal size, sometimes some other logic). I use simple barre where it **ought to** be, and add _shadow barre_ where it **could** maximally be. You can easily disable it by either setting `use-shadow-barre: false` on `new-chordgen` (only necessary part of barre rendered) or by setting color of `shadow-barre` the same as `barre` (maximal possible barre).
 
 
-### Name auto-scaling
+#### Name auto-scaling
 Chord name font size is _reduced_ for _large_ chord names, so the name fits well into chord diagram (see example above). That makes it much more pretty to stack several chords together. To achieve chordx-like behavior, you can always use `#figure(chord("…"), caption: …)`.
 
-### Customizing text
+#### Customizing text
 
 **Important**: _frets_ are rendered using `raw` elements. So if you want to customize their font or color, please use `#show raw: set text(fill: ...)` or similar things.
 
 The chord's name, on the other hand, uses default font, so to set it, just use `#set text(font: ...)` in the corresponding scope.
 
-# Tabs
+## Tabs
 
 > Everything there is experimental and probably unstable
 
@@ -492,31 +492,31 @@ The general idea is very simple: to write a number on some line, write `<fret nu
 
 **Spaces are important!** All notes and special symbols work well only if properly separated.
 
-### Duration
+#### Duration
 
 By default they will be quarter notes. To change that, you have to specify the duration: [`<fret>/<string>-<duration>`](## "Fret may be x there to show deaf note"), where duration is $log_2$ from note duration. So a whole note will be `-0`, a half: `-1` and so on. You can also use as many dots as you want to multiply duration by 1.5, e.g. `-2.`
 
 Once you change the duration, all the following notes will use it, so you have to specify duration every time it is changed (basically, always, but it really depends on composition). Of course, you can just ignore all that duration staff.
 
-### Bars and repetitions
+#### Bars and repetitions
 
 To add simple bar, just add `|`. To add double bar line, use `| |`. To add end movement/composition, add `||`. To add repetitions, use `|:` and `:|` respectively.
 
 There is also `rep()` "macro" that can repeat arbitrary content arbitrary number of times. However, I recommend using symbols to show repetitions instead.
 
-### Linebreaks
+#### Linebreaks
 
 Notes and bars that don't fit in line will be automatically moved to next. However, sometimes it isn't ideal and may be a bit bugged, so it is recommended to do that manually, using `\`.
 
 The line is autoscaled if it is possible and not too ugly. You can change the maximum and minimum scaling size with `scale-max` and `scale-min`. It is also possible to completely disable scaling with `enable-scale: false`.
 
-### Ties and slides
+#### Ties and slides
 
 You can _tie_ notes or _slide_ between them. To use ties, you have to add `^` in front of _second_ tied note, like `1/1 ^3/1`. To use slides you have to do the same, but with \`.
 
 _Current limitation:_ tying and sliding works only on the same string and may work really bad if tied/slided through line break.
 
-## Bends and vibratos
+### Bends and vibratos
 
 Add `b` after note, but before the duration (e.g. `2/3b-2`) to add a bend. After `b` you can write custom text to be written on top (for example, `b1/2`). Add `r` to the end to add a release.
 
@@ -524,7 +524,7 @@ Adding vibratos works the same way, via adding `v` to the note. The length of vi
 
 Unfortunately, they are all supported things for now. But wait, there is still one cool thing left!
 
-### Custom content
+#### Custom content
 
 Add any typst code you want between `## … ##`. It will be rendered with `cetz` on top of the line where you wrote it. That means you can write _lyrics, chords, add complex things like endings_, even **draw the elements that are still missing** (well, it is still worth to create issue there, I will try to do something).
 
@@ -534,11 +534,11 @@ You can set align of these elements by writing cetz anchors after the second (e.
 
 Additionally, if you enjoy drawing missing things, you can also use `preamble` and `extra` arguments in `tabs.new` where you can put any `cetz` inner things (tabs uses canvas, and that allow you drawing on it) before or after the tabs are drawn.
 
-## Rhythm section
+### Rhythm section
 
 Can be enabled or disabled with `rhythm: true`. It's far from ideal now, but may be useful for some basic purposes.
 
-# Plans
+## Plans
 
 There are lots of possible things to add to this package. With power of WASM engine quite anything is possible.
 
@@ -553,7 +553,7 @@ If you are interested in any of this, please create an issue or "vote" with reac
 
 In general, I will be very glad to receive _any feedback_, both issues and PR-s are very welcome! Though I can't promise I will be able to work on it immediately, it can take me a few weeks to react.
 
-# Changelog
+## Changelog
 
 (a very brief one)
 
