@@ -2,6 +2,17 @@
 #import "smart-chord.typ": smart-chord, red-missing-fifth, shift-chord-tonality
 #import "draw-chord.typ": get-chordgram-width-scale
 
+#let get-text(it) = {
+  if type(it) == str {
+    return it
+  }
+  if "children" in it.fields() {
+    it.children.map(c => get-text(c)).join()
+  } else if "text" in it.fields() {
+    it.text
+  }
+}
+
 /// 1. A simple function to place chord over text. Attaches <chord> tag to the text to apply tonality and make a chordlib. May be replaced with any custom.
 /// 
 /// Just add chord labels above lyrics in arbitrary place, don't think about what letter exactly it should be located. By default `overchord` aligns the chord label to the left, so it produces pretty results out-of-box. You can pass other alignments to `align` argument, or use the chords straight inside words.
@@ -23,7 +34,10 @@
   /// width of space in current font,
   /// may be set to zero if you don't put
   /// any spaces between chords and words -> length
-  width: -0.25em) = box(place(align, box(styling([#text <chord>]), width: float("inf")*1pt)), height: 1em + height, width: width) + sym.zwj
+  width: -0.25em) = {
+    box(place(align, box(styling([#text <chord>]), width: float("inf")*1pt)), height: 1em + height, width: width)
+    sym.zwj
+  }
 
 /// 1a. A replacement for overchord, displays chords inline in (double) square brackets
 /// -> content
@@ -31,7 +45,7 @@
   text,
   /// styling function that is applied to the string -> (text <chord>) => content
   styling: strong
-) = styling[\[\[#text<chord>\]\]]
+) = "[[" + styling[#text <chord>] + "]]"
 
 /// 1b. A replacement for overchord that "smartly" spreads chords along the words, but requires more writing:
 /// ```example
@@ -100,10 +114,8 @@
 }
 
 #let fancy-styling-autotonality(chord) = {
-  auto-tonality-chord(if "children" in chord.fields() {chord.children.map(c => if "text" in c.fields() {c.text}).join()} else {chord.text},
-  smart-chord: fancy-styling-plain)
-
-  box(place(hide[chord]))
+  auto-tonality-chord(get-text(chord), smart-chord: fancy-styling-plain)
+  box(place(hide[#chord <chord>]))
 }
 
 /// 1b. An overchord alternative, displays a chord above line that is changed with tonality 
@@ -149,7 +161,9 @@
   /// if false, reuses notation for scaling  
   sharp-only: false,
   ) = {
-  show <chord>: c => if get-tonality(c) == 0 {c} else {shift-chord-tonality(c.text, get-tonality(c), sharp-only: sharp-only)}
+  show <chord>: c => {
+    if get-tonality(c) == 0 {c} else {shift-chord-tonality(get-text(c), get-tonality(c), sharp-only: sharp-only)}
+  }
 
   let doc = if heading-reset-tonality != none {
     show heading.where(level: heading-reset-tonality): it => it + change-tonality(0)
@@ -228,7 +242,7 @@
   let chords-selector = inside-level-selector(selector(<chord>), heading-level)
   let rendered = ()
   for (i, c) in query(chords-selector)
-      .map(c => shift-chord-tonality(c.text.trim(), get-tonality(c), sharp-only: sharp-only))
+      .map(c => shift-chord-tonality(get-text(c).trim(), get-tonality(c), sharp-only: sharp-only))
       .dedup(key: t => shift-chord-tonality(t, 0, sharp-only: true))
       .enumerate() {
     if c in exclude {
