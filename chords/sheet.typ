@@ -107,13 +107,20 @@
    smart-chord(shift-chord-tonality(name, get-tonality(here()), sharp-only: sharp-only), ..args)
 }
 
-#let fancy-styling-plain(chord) = {
+
+/// 8a. Fancy styles given string into string -> str 
+#let fancy-styling-plain(
+  /// -> str
+  chord) = {
   show regex("\d"): super
   chord.replace("#", "♯")
     .replace("b", "♭")
 }
 
-#let fancy-styling-autotonality(chord) = {
+/// 8b. Fancy styles content, wuth automatic tonality change and chord library export -> content
+#let fancy-styling-autotonality(
+  /// -> content
+  chord) = {
   auto-tonality-chord(get-text(chord), smart-chord: fancy-styling-plain)
   box(place(hide(chord)))
 }

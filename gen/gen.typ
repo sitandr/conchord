@@ -28,7 +28,7 @@
   /// Note that doesn't affect chords with `/` that set bass, like `A/E`.
   /// You can abuse it to make chords have true bass with `Am/A`.
   /// 
-  /// Best to leave `true` for guitar, but `false` for ukulele, where the bas is not as important 
+  /// Best to leave `true` for guitar, but `false` for ukulele, where the bass is not as important  -> bool
   true-bass: true) = {
   let at = if at == none {255} else {at}
   let true-bass = if true-bass {255} else {0}
