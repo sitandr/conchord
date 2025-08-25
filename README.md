@@ -153,6 +153,8 @@ It is easy to customize the colors and styles of chords with `colors` argument a
         barre: purple,),
     // bar number displayed to left
     number-to-left: true,
+    // the height of diagram in frets
+    shown-frets-number: 4,
     // disable thick first line when chord played without shift
     thick-nut: false
 )
