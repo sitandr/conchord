@@ -117,7 +117,7 @@
     .replace("b", "♭")
 }
 
-/// 8b. Fancy styles content, wuth automatic tonality change and chord library export -> content
+/// 8b. Fancy styles content, with automatic tonality change and chord library export -> content
 #let fancy-styling-autotonality(
   /// -> content
   chord) = {

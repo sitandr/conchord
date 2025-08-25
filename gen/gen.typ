@@ -24,6 +24,9 @@
   tuning: default-tuning,
   /// What fret to find chords at -> int | none
   at: none,
+  /// If true (default), will add chords with omitted perfect fifth with question mark at the end
+  /// If false, filters them out -> bool
+  omit-fifth: true,
   /// Whether to require the lowest note to be the root note. 
   /// Note that doesn't affect chords with `/` that set bass, like `A/E`.
   /// You can abuse it to make chords have true bass with `Am/A`.
@@ -32,10 +35,16 @@
   true-bass: true) = {
   let at = if at == none {255} else {at}
   let true-bass = if true-bass {255} else {0}
-  str(conchord_gen.get_chords(bytes(tuning), bytes(name), bytes((at,)), bytes((true-bass, )))).split(";")
+  let chords = str(conchord_gen.get_chords(bytes(tuning), bytes(name), bytes((at,)), bytes((true-bass, )))).split(";")
+
+  if omit-fifth {
+    chords
+  } else {
+    chords.filter(c => not c.ends-with("?"))
+  }
 }
 
-/// Gets individual chord string
-#let get-chord(name, n: 0, tuning: default-tuning, at: none, true-bass: true) = {
-  get-chords(name, tuning: tuning, at: at, true-bass: true-bass).at(n)
+/// Gets individual chord string at n-th position, all the arguments are the same as for get-chords
+#let get-chord(name, n: 0, tuning: default-tuning, at: none, true-bass: true, omit-fifth: true,) = {
+  get-chords(name, tuning: tuning, at: at, true-bass: true-bass, omit-fifth: omit-fifth).at(n)
 }

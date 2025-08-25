@@ -40,9 +40,12 @@
   at: none,
   /// if specified, applies given function to chord name -> function | none
   styling: none,
+  /// If true (default), will add chords with omitted perfect fifth with question mark at the end
+  /// If false, filters them out -> bool
+  omit-fifth: true,
   /// see `draw-chord` for reference -> length
   scale-l: 1pt) = {
-  let chord = chordgen(get-chord(name, n: n, tuning: tuning, at: at), name: name, scale-l: scale-l)
+  let chord = chordgen(get-chord(name, n: n, tuning: tuning, at: at, omit-fifth: omit-fifth, true-bass: true-bass), name: name, scale-l: scale-l)
   if styling == none {
     chord
   } else {
