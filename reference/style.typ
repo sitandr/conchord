@@ -1,4 +1,4 @@
-#import "@preview/tidy:0.4.0": utilities.eval-docstring
+#import "@preview/tidy:0.4.3": utilities.eval-docstring
 
 // Color to highlight function names in
 #let function-name-color = rgb("#4b69c6")
@@ -199,7 +199,7 @@
   link(label, raw(name, lang: none))
 }
 
-#import "@preview/tidy:0.4.0": show-example as example
+#import "@preview/tidy:0.4.3": show-example as example
 
 #let show-example(
   ..args
