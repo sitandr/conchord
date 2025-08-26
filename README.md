@@ -1,5 +1,4 @@
 ## Conchord
-> Notice: I'm preparing the update, so the documentation there is referring to the new version.
 
 `conchord` (concise chord) is a [Typst](https://github.com/typst/typst) package for string instruments.
 
