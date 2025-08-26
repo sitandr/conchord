@@ -385,6 +385,8 @@ For now the chord can consist of:
 * Zero or one "crunchy" modifiers, which moves "higher notes" into the same octave frame as the root (i.e., `!`).
 ```
 
+I have also added -5 chords support in a hacky way.
+
 _Sometimes it may be not obvious how to convert your chord name into kord's specification._
 
 For example, `Cmaj7-5` or `Cmaj7` converts into `Cmaj7b5` or `Cmaj7(b5)`. The same applies for `+5` to `#5`.
