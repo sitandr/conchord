@@ -561,9 +561,9 @@ In general, I will be very glad to receive _any feedback_, both issues and PR-s 
 - 0.4.0:
   - Improvements to WASM backend: -5 chords support, better evaluation, fixed crash #13
   - Added aligned chords song sheet layout function, as an alternative to overchord
-  - Improve styling possibilies
+  - Improve styling possibilities
   - Added "fancy" styling
-  - Made number of frets on image changeble
+  - Made number of frets on image changeable
   - Added option to finding chords without missing fifth
   - Reference improvements
 - 0.3.0:
